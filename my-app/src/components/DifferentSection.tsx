@@ -22,29 +22,29 @@ const DifferentSection = () => {
   ];
 
   return (
-    <section id="about" className="min-h-screen flex items-center py-20 bg-background">
-      <div className="container mx-auto px-6">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+    <section id="about" className="min-h-screen flex items-center py-12 lg:py-16 bg-background">
+      <div className="container mx-auto px-4 lg:px-6 xl:px-8">
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
           <div className="animate-fade-up">
-            <h2 className="text-5xl font-bold mb-12">
+            <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold mb-6 lg:mb-8">
               What Makes us
               <br />
               Different?
             </h2>
             
-            <div className="space-y-6">
+            <div className="space-y-3 lg:space-y-4">
               {features.map((feature, idx) => (
                 <Card 
                   key={idx} 
-                  className="p-6 flex gap-4 hover:shadow-lg transition-shadow animate-fade-up"
+                  className="p-3 lg:p-4 flex gap-2 lg:gap-3 hover:shadow-lg transition-shadow animate-fade-up"
                   style={{ animationDelay: `${idx * 0.1}s` }}
                 >
-                  <div className="w-16 h-16 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                    <feature.icon className="w-8 h-8 text-primary-foreground" />
+                  <div className="w-10 h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
+                    <feature.icon className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 text-primary-foreground" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-lg mb-2">{feature.title}</h3>
-                    <p className="text-muted-foreground">{feature.description}</p>
+                    <h3 className="font-bold text-sm lg:text-base xl:text-lg mb-0.5 lg:mb-1">{feature.title}</h3>
+                    <p className="text-muted-foreground text-xs lg:text-sm">{feature.description}</p>
                   </div>
                 </Card>
               ))}
@@ -57,7 +57,7 @@ const DifferentSection = () => {
               <img 
                 src={differentCharacter} 
                 alt="What makes us different" 
-                className="relative w-full max-w-lg h-auto object-contain"
+                className="relative w-full max-w-xs lg:max-w-sm xl:max-w-md h-auto object-contain"
               />
             </div>
           </div>
