@@ -1,6 +1,5 @@
 import { Card } from "@/components/ui/card";
 import { Network, Wallet, GraduationCap } from "lucide-react";
-import differentCharacter from "@/assets/different-character.png";
 
 const DifferentSection = () => {
   const features = [
@@ -22,43 +21,32 @@ const DifferentSection = () => {
   ];
 
   return (
-    <section id="about" className="min-h-screen flex items-center py-12 lg:py-16 bg-background">
-      <div className="container mx-auto px-4 lg:px-6 xl:px-8">
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-          <div className="animate-fade-up">
-            <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold mb-6 lg:mb-8">
+    <section id="about" className="min-h-screen flex items-center py-8 lg:py-12 bg-background">
+      <div className="container mx-auto px-4 lg:px-6 xl:px-8 max-w-6xl">
+        <div>
+          <div className="animate-fade-up max-w-lg">
+            <h2 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-4 lg:mb-6">
               What Makes us
               <br />
               Different?
             </h2>
             
-            <div className="space-y-3 lg:space-y-4">
+            <div className="space-y-4 lg:space-y-5">
               {features.map((feature, idx) => (
-                <Card 
+                <div 
                   key={idx} 
-                  className="p-3 lg:p-4 flex gap-2 lg:gap-3 hover:shadow-lg transition-shadow animate-fade-up"
+                  className="relative flex items-center animate-fade-up"
                   style={{ animationDelay: `${idx * 0.1}s` }}
                 >
-                  <div className="w-10 h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 rounded-full bg-primary flex items-center justify-center flex-shrink-0">
-                    <feature.icon className="w-5 h-5 lg:w-6 lg:h-6 xl:w-7 xl:h-7 text-primary-foreground" />
+                  <div className="absolute left-0 z-10 w-10 h-10 lg:w-12 lg:h-12 xl:w-14 xl:h-14 rounded-full bg-primary flex items-center justify-center flex-shrink-0 shadow-lg">
+                    <feature.icon className="w-4 h-4 lg:w-5 lg:h-5 xl:w-6 xl:h-6 text-primary-foreground" />
                   </div>
-                  <div>
-                    <h3 className="font-bold text-sm lg:text-base xl:text-lg mb-0.5 lg:mb-1">{feature.title}</h3>
-                    <p className="text-muted-foreground text-xs lg:text-sm">{feature.description}</p>
-                  </div>
-                </Card>
+                  <Card className="w-full pl-8 lg:pl-10 xl:pl-12 pr-2 lg:pr-3 py-4 lg:py-5 hover:shadow-lg transition-shadow border-2 rounded-2xl ml-5 lg:ml-6 xl:ml-7">
+                    <h3 className="font-bold text-xs lg:text-sm mb-0.5">{feature.title}</h3>
+                    <p className="text-muted-foreground text-[10px] lg:text-xs leading-relaxed">{feature.description}</p>
+                  </Card>
+                </div>
               ))}
-            </div>
-          </div>
-          
-          <div className="flex justify-center lg:justify-end animate-scale-in">
-            <div className="relative">
-              <div className="absolute inset-0 bg-secondary/40 rounded-full blur-3xl"></div>
-              <img 
-                src={differentCharacter} 
-                alt="What makes us different" 
-                className="relative w-full max-w-xs lg:max-w-sm xl:max-w-md h-auto object-contain"
-              />
             </div>
           </div>
         </div>

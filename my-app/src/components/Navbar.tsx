@@ -7,10 +7,16 @@ import { useState, useEffect } from "react";
 const Navbar = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     const controlNavbar = () => {
       const currentScrollY = window.scrollY;
+      
+      // Clear any existing timeout
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
       
       if (currentScrollY < 10) {
         setIsVisible(true);
@@ -22,6 +28,12 @@ const Navbar = () => {
         setIsVisible(true);
       }
       
+      // Set a new timeout to show navbar after 1 second of no scrolling
+      const timeout = setTimeout(() => {
+        setIsVisible(true);
+      }, 1000);
+      
+      setScrollTimeout(timeout);
       setLastScrollY(currentScrollY);
     };
 
@@ -29,8 +41,11 @@ const Navbar = () => {
     
     return () => {
       window.removeEventListener('scroll', controlNavbar);
+      if (scrollTimeout) {
+        clearTimeout(scrollTimeout);
+      }
     };
-  }, [lastScrollY]);
+  }, [lastScrollY, scrollTimeout]);
 
   return (
     <nav 

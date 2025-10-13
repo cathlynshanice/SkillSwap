@@ -1,7 +1,7 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Heart, Instagram, Facebook, Linkedin } from "lucide-react";
+import { Heart, Instagram, Facebook, Linkedin, ArrowLeftRight, ArrowRight } from "lucide-react";
 import featuresCharacter from "@/assets/features-character.png";
 
 const FeaturesSection = () => {
@@ -38,34 +38,40 @@ const FeaturesSection = () => {
   ];
 
   const barterSkills = [
-    { name: "Lisa Williams", location: "Tangerang, ERP", badge: "Strategy", price: "$452", badgeColor: "bg-amber-200" },
-    { name: "Gary Roberts", location: "Service Area, KRIS", badge: "Add Reviewer", price: "$825", badgeColor: "bg-orange-200" },
-    { name: "Davit Ozturk", location: "Security, AXIS", badge: "Manager", price: "621", badgeColor: "bg-purple-200" },
+    { 
+      name: "Lisa Williams", 
+      location: "Tangerang, ERP", 
+      badge: "Strategy", 
+      price: "$452", 
+      badgeColor: "bg-amber-200",
+      offering: "Marketing Strategy",
+      seeking: "UI/UX Design"
+    },
   ];
 
   return (
-    <section id="features" className="min-h-screen flex items-center py-12 lg:py-16 bg-background">
+    <section id="features" className="min-h-screen flex items-center py-20 lg:py-24 bg-background">
       <div className="container mx-auto px-4 lg:px-6 xl:px-8">
-        <div className="mb-6 lg:mb-8 animate-fade-up">
-          <h2 className="text-3xl lg:text-4xl xl:text-5xl font-bold mb-2">
+        <div className="mb-4 lg:mb-6 animate-fade-up">
+          <h2 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-2">
             Features
             <div className="h-1 w-24 lg:w-32 bg-primary mt-2"></div>
           </h2>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-6 lg:gap-8 items-start">
+        <div className="grid lg:grid-cols-2 gap-4 lg:gap-6 items-start">
           <div className="animate-fade-up" style={{ animationDelay: "0.1s" }}>
-            <h3 className="text-2xl lg:text-3xl xl:text-4xl font-bold mb-4 lg:mb-6">
+            <h3 className="text-lg lg:text-xl xl:text-2xl font-bold mb-3 lg:mb-4">
               Find Job <span className="text-primary">Opportunities!</span>
             </h3>
             
-            <Card className="p-3 lg:p-4 bg-gradient-card shadow-lg">
+            <Card className="p-2 lg:p-3 bg-gradient-card shadow-lg">
               <div className="flex gap-2 mb-3 lg:mb-4 overflow-x-auto">
                 {categories.map((cat, idx) => (
                   <Badge 
                     key={idx} 
                     variant={idx === 0 ? "default" : "outline"}
-                    className={`text-xs lg:text-sm ${idx === 0 ? "bg-accent hover:bg-accent/90" : ""}`}
+                    className={`text-[10px] lg:text-xs ${idx === 0 ? "bg-accent hover:bg-accent/90" : ""}`}
                   >
                     {cat}
                   </Badge>
@@ -74,7 +80,7 @@ const FeaturesSection = () => {
               
               <div className="grid sm:grid-cols-3 gap-3 lg:gap-4">
                 {jobCards.map((job, idx) => (
-                  <Card key={idx} className={`p-3 lg:p-4 ${job.color} border-none`}>
+                  <Card key={idx} className={`p-2 lg:p-3 ${job.color} border-none`}>
                     <h4 className="font-bold text-sm lg:text-base mb-2 lg:mb-3">{job.title}</h4>
                     <div className="flex gap-1.5 lg:gap-2 mb-3 lg:mb-4">
                       {job.tags.map((tag, i) => (
@@ -83,7 +89,7 @@ const FeaturesSection = () => {
                         </Badge>
                       ))}
                     </div>
-                    <p className="text-lg lg:text-xl xl:text-2xl font-bold mb-3 lg:mb-4">{job.salary}</p>
+                    <p className="text-base lg:text-lg xl:text-xl font-bold mb-3 lg:mb-4">{job.salary}</p>
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5 lg:gap-2">
                         <div className="w-7 h-7 lg:w-8 lg:h-8 rounded-full bg-white"></div>
@@ -101,54 +107,68 @@ const FeaturesSection = () => {
               </div>
             </Card>
             
-            <div className="flex justify-center mt-4 lg:mt-6">
+            <div className="flex justify-center mt-12 lg:mt-16">
               <img 
                 src={featuresCharacter} 
                 alt="Features character" 
-                className="w-40 lg:w-48 xl:w-56 h-auto object-contain"
+                className="w-48 lg:w-56 xl:w-64 h-auto object-contain"
               />
             </div>
           </div>
 
           <div className="animate-fade-up" style={{ animationDelay: "0.2s" }}>
-            <h3 className="text-2xl lg:text-3xl xl:text-4xl font-bold mb-4 lg:mb-6">
+            <h3 className="text-lg lg:text-xl xl:text-2xl font-bold mb-3 lg:mb-4">
               <span className="text-primary">Barter</span> Skills
             </h3>
             
-            <Card className="p-3 lg:p-4 bg-gradient-card shadow-lg">
-              <div className="space-y-2 lg:space-y-3">
-                {barterSkills.map((skill, idx) => (
-                  <Card key={idx} className="p-3 lg:p-4 hover:shadow-md transition-shadow">
-                    <div className="flex items-start gap-2 lg:gap-3 mb-2 lg:mb-3">
-                      <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-blue"></div>
-                      <div className="flex-1">
-                        <h4 className="font-bold text-sm lg:text-base">{skill.name}</h4>
-                        <p className="text-[10px] lg:text-xs text-muted-foreground">{skill.location}</p>
-                      </div>
+            <Card className="p-2 lg:p-3 bg-gradient-card shadow-lg">
+              {barterSkills.map((skill, idx) => (
+                <Card key={idx} className="p-2 lg:p-3 hover:shadow-md transition-shadow">
+                  {/* Top Section: Profile and Info */}
+                  <div className="flex items-start gap-2 lg:gap-3 mb-2">
+                    <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-blue flex-shrink-0"></div>
+                    <div className="flex-1 min-w-0">
+                      <h4 className="font-bold text-xs lg:text-sm mb-0.5">{skill.name}</h4>
+                      <p className="text-[9px] lg:text-[10px] text-muted-foreground mb-1">{skill.location}</p>
+                      <Badge className={`${skill.badgeColor} text-foreground text-[9px] lg:text-[10px] px-1.5`}>
+                        {skill.badge}
+                      </Badge>
                     </div>
-                    <Badge className={`${skill.badgeColor} text-foreground mb-2 lg:mb-3 text-xs`}>
-                      {skill.badge}
-                    </Badge>
-                    <div className="flex items-center gap-2 lg:gap-3 mb-2 lg:mb-3">
-                      <Instagram className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                      <Facebook className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                      <Linkedin className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
+                    <div className="flex items-center gap-1.5">
+                      <Instagram className="w-3 h-3 lg:w-3.5 lg:h-3.5 cursor-pointer hover:text-primary transition-colors" />
+                      <Facebook className="w-3 h-3 lg:w-3.5 lg:h-3.5 cursor-pointer hover:text-primary transition-colors" />
+                      <Linkedin className="w-3 h-3 lg:w-3.5 lg:h-3.5 cursor-pointer hover:text-primary transition-colors" />
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div>
-                        <p className="text-[10px] lg:text-xs text-muted-foreground">Advertising Price</p>
-                        <p className="text-lg lg:text-xl font-bold">{skill.price}</p>
-                      </div>
-                      <div className="flex gap-1.5 lg:gap-2">
-                        <Button variant="outline" size="icon" className="h-8 w-8 lg:h-9 lg:w-9">
-                          <Heart className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
-                        </Button>
-                        <Button className="text-xs lg:text-sm px-3 lg:px-4">Send message</Button>
-                      </div>
+                  </div>
+                  
+                  {/* Barter Exchange Section */}
+                  <div className="flex items-center gap-1.5 lg:gap-2 mb-2 p-1.5 lg:p-2 bg-muted/30 rounded-lg">
+                    <div className="flex-1 text-center">
+                      <p className="text-[9px] lg:text-[10px] text-muted-foreground mb-0.5">Offering</p>
+                      <p className="text-[10px] lg:text-xs font-semibold text-primary">{skill.offering}</p>
                     </div>
-                  </Card>
-                ))}
-              </div>
+                    <ArrowLeftRight className="w-4 h-4 lg:w-5 lg:h-5 text-primary flex-shrink-0" />
+                    <div className="flex-1 text-center">
+                      <p className="text-[9px] lg:text-[10px] text-muted-foreground mb-0.5">Seeking</p>
+                      <p className="text-[10px] lg:text-xs font-semibold text-primary">{skill.seeking}</p>
+                    </div>
+                  </div>
+                  
+                  {/* Bottom Section: Price and Actions */}
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-[9px] lg:text-[10px] text-muted-foreground mb-0.5">Advertising Price</p>
+                      <p className="text-base lg:text-lg font-bold">{skill.price}</p>
+                    </div>
+                    <div className="flex gap-1 lg:gap-1.5">
+                      <Button variant="outline" size="icon" className="h-7 w-7 lg:h-8 lg:w-8 rounded-full">
+                        <Heart className="w-3 h-3 lg:w-3.5 lg:h-3.5" />
+                      </Button>
+                      <Button className="text-[10px] lg:text-xs px-2 lg:px-3 rounded-full">Send message</Button>
+                    </div>
+                  </div>
+                </Card>
+              ))}
             </Card>
           </div>
         </div>
