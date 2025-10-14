@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/SupabaseClient";
+import microsoftimg from "@/assets/microsoft.png";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -55,51 +56,10 @@ export default function LoginPage() {
           onClick={handleMicrosoftLogin}
           className="w-full flex items-center justify-center gap-2 bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg font-semibold mb-4 transition"
         >
-          <img src="/microsoft.svg" alt="Microsoft" className="w-5 h-5" />
+          <img src={microsoftimg} alt="Microsoft" className="w-5 h-5" />
           Continue with Microsoft
         </button>
-
-        <div className="flex items-center my-4">
-          <hr className="flex-1 border-gray-300" />
-          <span className="text-gray-500 text-sm px-3">or</span>
-          <hr className="flex-1 border-gray-300" />
-        </div>
-
-        {/* Email-password form */}
-        <form onSubmit={handleLogin} className="flex flex-col gap-4">
-          <input
-            type="email"
-            placeholder="BINUS Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          />
-
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-
-          <button
-            type="submit"
-            className="bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
-          >
-            Login
-          </button>
-        </form>
-
-        <p className="text-center text-gray-600 text-sm mt-6">
-          Don’t have an account?{" "}
-          <a href="/signup" className="text-blue-600 hover:underline">
-            Sign Up
-          </a>
-        </p>
+        
       </div>
     </div>
   );

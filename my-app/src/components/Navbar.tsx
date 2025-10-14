@@ -80,7 +80,7 @@ const Navbar = () => {
               Contact
             </a>
             <Button asChild className="rounded-lg text-sm lg:text-base px-3 lg:px-4 py-1.5 lg:py-2">
-              <a href="#login">Login</a>
+              <a href="/login">Login</a>
             </Button>
           </div>
         </div>
