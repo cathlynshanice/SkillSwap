@@ -22,7 +22,7 @@ const HeroSection = () => {
   ];
 
   return (
-    <section id="home" className="min-h-screen flex items-center bg-background pt-16">
+    <section id="hero" className="min-h-screen flex items-center bg-background pt-16">
       <div className="container mx-auto px-4 lg:px-8 xl:px-12 py-8 lg:py-12">
         <div className="grid lg:grid-cols-3 gap-8 lg:gap-12 xl:gap-16 items-center">
           {/* Left Content - Title and Subtitle Only */}

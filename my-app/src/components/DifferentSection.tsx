@@ -21,7 +21,7 @@ const DifferentSection = () => {
   ];
 
   return (
-    <section id="about" className="min-h-screen flex items-center py-8 lg:py-12 bg-background">
+    <section id="different" className="min-h-screen flex items-center py-8 lg:py-12 bg-background">
       <div className="container mx-auto px-4 lg:px-6 xl:px-8 max-w-6xl">
         <div>
           <div className="animate-fade-up max-w-lg">

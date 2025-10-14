@@ -3,15 +3,17 @@ import HeroSection from "@/components/HeroSection";
 import FeaturesSection from "@/components/FeaturesSection";
 import DifferentSection from "@/components/DifferentSection";
 import OffersSection from "@/components/OffersSection";
+import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
+    <div>
       <Navbar />
       <HeroSection />
-      <FeaturesSection />
       <DifferentSection />
+      <FeaturesSection />
       <OffersSection />
+      <Footer />
     </div>
   );
 };
