@@ -112,7 +112,8 @@ All colors MUST be HSL.
     scroll-behavior: smooth;
   }
   
-  section {
+  section,
+  footer {
     scroll-snap-align: start;
     scroll-snap-stop: always;
   }

@@ -12,30 +12,46 @@ const FeaturesSection = () => {
       service: "Math Tutoring",
       studentName: "Alex Doe",
       major: "Mathematics, Year 3",
-      rate: "$25/hour",
+      rate: "Rp 375.000/jam",
       tags: ["STEM", "Tutoring"],
       icon: <BookOpen className="w-6 h-6 text-primary" />,
+    },
+    {
+      service: "Photography Session",
+      studentName: "Jane Smith",
+      major: "Visual Communication Design, Year 2",
+      rate: "Rp 750.000/sesi",
+      tags: ["Creative", "Photography"],
+      icon: <Camera className="w-6 h-6 text-primary" />,
+    },
+    {
+      service: "Essay Proofreading",
+      studentName: "John Lee",
+      major: "English Literature, Year 4",
+      rate: "Rp 225.000/1000 kata",
+      tags: ["Academic", "Writing"],
+      icon: <PenSquare className="w-6 h-6 text-primary" />,
     },
   ];
 
   return (
-    <section id="features" className="relative pt-24 lg:pt-28 pb-24 lg:pb-28 bg-background overflow-hidden">
-      <div className="container mx-auto px-12 relative z-10">
+    <section id="features" className="relative min-h-screen flex items-center py-8 lg:py-12 bg-background overflow-hidden">
+      <div className="container mx-auto px-12 relative z-10 pt-8">
         <div className="text-center mb-12 animate-fade-up">
           <h2 className="text-2xl lg:text-3xl font-bold mb-2">
             Your Campus Marketplace for <span className="text-primary">Skills & Services</span>
           </h2>
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-sm text-muted-foreground max-w-3xl mx-auto">
             Find academic help, creative services, or barter your skills with fellow students right from your university.
           </p>
         </div>
 
         <div className="flex justify-center">
           {/* Services Section */}
-          <div className="w-full space-y-6 animate-fade-up" style={{ animationDelay: "0.2s" }}>
+          <div className="w-full space-y-4 animate-fade-up" style={{ animationDelay: "0.2s" }}>
             <h3 className="text-2xl font-bold flex items-center gap-3">
-              Explore Student Services
               <Lightbulb className="w-6 h-6 text-primary" />
+              Explore Student Services
             </h3>
             
             <div className="flex flex-wrap gap-2">
@@ -66,7 +82,7 @@ const FeaturesSection = () => {
                     </div>
                   </div>
                   <div className="text-left sm:text-right mt-4 sm:mt-0 flex-shrink-0">
-                    <p className="font-bold text-lg text-primary mb-2">{service.rate}</p>
+                    <p className="font-bold text-base text-primary mb-2">{service.rate}</p>
                     <Button>Book Now <ArrowRight className="ml-2 w-4 h-4" /></Button>
                   </div>
                 </Card>

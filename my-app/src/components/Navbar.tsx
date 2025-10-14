@@ -1,7 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Quote } from "lucide-react";
+import SkillSwapLogo from "@/assets/SkillSwapLogo.svg";
 import { useState, useEffect } from "react";
 
 const Navbar = () => {
@@ -28,10 +28,10 @@ const Navbar = () => {
         setIsVisible(true);
       }
       
-      // Set a new timeout to show navbar after 1 second of no scrolling
+      // Set a new timeout to show navbar after 0.3 second of no scrolling
       const timeout = setTimeout(() => {
         setIsVisible(true);
-      }, 1000);
+      }, 300);
       
       setScrollTimeout(timeout);
       setLastScrollY(currentScrollY);
@@ -56,7 +56,7 @@ const Navbar = () => {
       <div className="container mx-auto px-4 lg:px-6 xl:px-8 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Quote className="w-6 h-6 lg:w-7 lg:h-7 text-primary" />
+            <img src={SkillSwapLogo} alt="SkillSwap Logo" className="w-7 h-7 lg:w-8 lg:h-8" />
             <div>
               <h1 className="text-lg lg:text-xl font-bold">SkillSwap</h1>
               <p className="text-[10px] lg:text-xs text-muted-foreground">Learn, Share, and Swap Skills.</p>
@@ -64,22 +64,24 @@ const Navbar = () => {
           </div>
           
           <div className="hidden md:flex items-center gap-4 lg:gap-6 xl:gap-8">
-            <a href="#home" className="text-sm lg:text-base font-semibold hover:text-primary transition-colors">
+            <a href="#hero" className="text-sm lg:text-base font-semibold hover:text-primary transition-colors">
               Home
             </a>
-            <a href="#about" className="text-sm lg:text-base hover:text-primary transition-colors">
+            <a href="#different" className="text-sm lg:text-base hover:text-primary transition-colors">
               About
             </a>
             <a href="#features" className="text-sm lg:text-base hover:text-primary transition-colors">
               Features
             </a>
-            <a href="#contacts" className="text-sm lg:text-base hover:text-primary transition-colors">
-              Contacts
+            <a href="#offers" className="text-sm lg:text-base hover:text-primary transition-colors">
+              Offers
             </a>
-            <a href="#login" className="text-sm lg:text-base hover:text-primary transition-colors">
-              Login
+            <a href="#footer" className="text-sm lg:text-base hover:text-primary transition-colors">
+              Contact
             </a>
-            <Button className="rounded-lg text-sm lg:text-base px-3 lg:px-4 py-1.5 lg:py-2">Sign Up</Button>
+            <Button asChild className="rounded-lg text-sm lg:text-base px-3 lg:px-4 py-1.5 lg:py-2">
+              <a href="#login">Login</a>
+            </Button>
           </div>
         </div>
       </div>

@@ -8,10 +8,10 @@ const OffersSection = () => {
   const categories = ["Non-Academic", "UI/UX Design", "Web Development", "Financial", "Business", "Data Science"];
   
   const students = [
-    { name: "Student 1", location: "Tangerang, Indonesia", badge: "Art Director", badgeColor: "bg-green-200", price: "$20" },
-    { name: "Student 2", location: "Jakarta, Indonesia", badge: "Illustrator", badgeColor: "bg-amber-200", price: "$15" },
-    { name: "Student 3", location: "Bekasi, Indonesia", badge: "UI/UX Designer", badgeColor: "bg-blue-200", price: "$8" },
-    { name: "Student 4", location: "Bali, Indonesia", badge: "Motion Designer", badgeColor: "bg-amber-200", price: "$12" },
+    { name: "Student 1", location: "Tangerang, Indonesia", badge: "Art Director", badgeColor: "bg-green-200", price: "Rp 300.000" },
+    { name: "Student 2", location: "Jakarta, Indonesia", badge: "Illustrator", badgeColor: "bg-amber-200", price: "Rp 225.000" },
+    { name: "Student 3", location: "Bekasi, Indonesia", badge: "UI/UX Designer", badgeColor: "bg-blue-200", price: "Rp 120.000" },
+    { name: "Student 4", location: "Bali, Indonesia", badge: "Motion Designer", badgeColor: "bg-amber-200", price: "Rp 180.000" },
   ];
 
   return (
@@ -83,7 +83,7 @@ const OffersSection = () => {
               
               <div className="mb-2 lg:mb-3">
                 <p className="text-[10px] lg:text-xs text-muted-foreground mb-0.5">Advertising Price</p>
-                <p className="text-xl lg:text-2xl font-bold">{student.price}</p>
+                <p className="text-lg lg:text-xl font-bold">{student.price}</p>
               </div>
               
               <div className="flex gap-1.5 lg:gap-2">
@@ -96,10 +96,10 @@ const OffersSection = () => {
           ))}
         </div>
 
-        <Card className="bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300 text-white p-3 lg:p-4 xl:p-5 relative overflow-hidden animate-scale-in border-none">
+        <Card className="bg-gradient-to-r from-blue-500 via-blue-400 to-blue-300 text-white px-3 lg:px-4 xl:px-5 py-6 lg:py-8 xl:py-10 relative overflow-hidden animate-scale-in border-none">
           <div className="relative z-10 pl-4 lg:pl-6 xl:pl-8">
             <div>
-              <h3 className="text-lg lg:text-xl xl:text-2xl font-bold mb-2 lg:mb-3">
+              <h3 className="text-base lg:text-lg xl:text-xl font-bold mb-4 lg:mb-5">
                 Realize Your Projects,
                 <br />
                 Sharpen Your Talents!
