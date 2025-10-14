@@ -7,7 +7,7 @@ import { ArrowRight, BookOpen, Camera, PenSquare, Lightbulb, ArrowRightLeft, Pal
 const BarterCard = ({ deal }) => (
   <Card className="p-4 bg-card shadow-md w-full max-w-xs">
     <div className="flex items-center gap-3">
-      <img src={deal.avatar} alt={deal.name} className="w-12 h-12 rounded-full border-2 border-primary" />
+      <img src={deal.avatar} alt={deal.name} className="w-12 h-12 rounded-full border-2 border-primary object-cover" />
       <div className="flex-1">
         <h3 className="font-bold text-sm">{deal.name}</h3>
         <p className="text-xs text-muted-foreground">{deal.major}, {deal.year}</p>
@@ -60,7 +60,7 @@ const FeaturesSection = () => {
       year: 2022,
       skill: "Logo Design",
       skillIcon: <Palette className="w-3 h-3" />,
-      avatar: "https://avatar.vercel.sh/budi.png",
+      avatar: "https://picsum.photos/seed/Budi/200",
     },
     {
       name: "Citra Lestari",
@@ -68,7 +68,7 @@ const FeaturesSection = () => {
       year: 2021,
       skill: "Web Development",
       skillIcon: <Terminal className="w-3 h-3" />,
-      avatar: "https://avatar.vercel.sh/citra.png",
+      avatar: "https://picsum.photos/seed/Citra/200",
     },
   ];
 
@@ -138,7 +138,7 @@ const FeaturesSection = () => {
               Don't have cash? Exchange your skills for other services you need.
             </p>
             
-            <div className="relative flex justify-center items-center w-full h-full min-h-[300px] p-4 bg-gradient-to-br from-cyan-50 to-blue-100 dark:from-cyan-950/20 dark:to-blue-950/20 rounded-2xl shadow-inner-lg border-2 flex-grow">
+            <div className="relative flex justify-center items-center w-full h-full min-h-[300px] p-4 bg-gradient-to-br from-blue-50 to-blue-200 dark:from-blue-950/20 dark:to-indigo-950/20 rounded-2xl shadow-inner-lg border-2 flex-grow">
                 {/* Card 1 */}
                 <div className="transform -translate-x-6 lg:-translate-x-12 -translate-y-6 lg:-translate-y-8">
                   <BarterCard deal={barterDeals[0]} />

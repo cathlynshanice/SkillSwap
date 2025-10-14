@@ -2,21 +2,20 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import ChatPopup from "./ChatPopup";
-import { Heart, Instagram, Facebook, Linkedin, ChevronLeft, ChevronRight, Search, ArrowRight } from "lucide-react";
+import { Heart, Instagram, Facebook, Linkedin, ChevronLeft, ChevronRight, Search, ArrowRight, Repeat } from "lucide-react";
 import React, { useState } from "react";
+import ChatPopup from "./ChatPopup";
 
 const OffersSection = () => {
   const [activeStudent, setActiveStudent] = useState<any>(null);
-  const currentUser = { name: "You" }; 
+  const currentUser = { name: "You" };
   const categories = ["Non-Academic", "UI/UX Design", "Web Development", "Financial", "Business", "Data Science"];
   
-
   const students = [
-    { name: "Student 1", location: "Tangerang, Indonesia", badge: "Art Director", badgeColor: "bg-green-200", price: "Rp 300.000" },
-    { name: "Student 2", location: "Jakarta, Indonesia", badge: "Illustrator", badgeColor: "bg-amber-200", price: "Rp 225.000" },
-    { name: "Student 3", location: "Bekasi, Indonesia", badge: "UI/UX Designer", badgeColor: "bg-blue-200", price: "Rp 120.000" },
-    { name: "Student 4", location: "Bali, Indonesia", badge: "Motion Designer", badgeColor: "bg-amber-200", price: "Rp 180.000" },
+    { name: "Student 1", location: "Tangerang, Indonesia", badge: "Art Director", badgeColor: "bg-green-200", price: "Rp 300.000", acceptsBarter: true, avatar: "https://picsum.photos/seed/Student1/200" },
+    { name: "Student 2", location: "Jakarta, Indonesia", badge: "Illustrator", badgeColor: "bg-amber-200", price: "Rp 225.000", acceptsBarter: false, avatar: "https://picsum.photos/seed/Student2/200" },
+    { name: "Student 3", location: "Bekasi, Indonesia", badge: "UI/UX Designer", badgeColor: "bg-blue-200", price: "Rp 120.000", acceptsBarter: true, avatar: "https://picsum.photos/seed/Student3/200" },
+    { name: "Student 4", location: "Bali, Indonesia", badge: "Motion Designer", badgeColor: "bg-amber-200", price: "Rp 180.000", acceptsBarter: true, avatar: "https://picsum.photos/seed/Student4/200" },
   ];
 
   return (
@@ -69,7 +68,7 @@ const OffersSection = () => {
               style={{ animationDelay: `${idx * 0.1}s` }}
             >
               <div className="flex items-start gap-2 lg:gap-3 mb-2 lg:mb-3">
-                <div className="w-10 h-10 lg:w-12 lg:h-12 rounded-full bg-gradient-blue"></div>
+                <img src={student.avatar} alt={student.name} className="w-10 h-10 lg:w-12 lg:h-12 rounded-full border-2 border-primary object-cover" />
                 <div className="flex-1">
                   <h4 className="font-bold text-sm lg:text-base">{student.name}</h4>
                   <p className="text-[10px] lg:text-xs text-muted-foreground">{student.location}</p>
@@ -88,18 +87,26 @@ const OffersSection = () => {
               
               <div className="mb-2 lg:mb-3">
                 <p className="text-[10px] lg:text-xs text-muted-foreground mb-0.5">Advertising Price</p>
-                <p className="text-lg lg:text-xl font-bold">{student.price}</p>
+                <div className="flex items-center gap-2">
+                  <p className="text-lg lg:text-xl font-bold">{student.price}</p>
+                  {student.acceptsBarter && (
+                    <Repeat className="w-4 h-4 text-green-500" title="Barter Available" />
+                  )}
+                </div>
               </div>
               
               <div className="flex gap-1.5 lg:gap-2">
                 <Button variant="outline" size="icon" className="rounded-full h-8 w-8 lg:h-9 lg:w-9">
                   <Heart className="w-3.5 h-3.5 lg:w-4 lg:h-4" />
                 </Button>
-                <Button className="flex-1 rounded-full text-xs lg:text-sm"
-                onClick={() => setActiveStudent(student)}
-                >
+                <Button className="flex-1 rounded-full text-xs lg:text-sm" onClick={() => setActiveStudent(student)}>
                   Send message
                 </Button>
+                {student.acceptsBarter && (
+                  <Button variant="outline" size="icon" className="rounded-full h-8 w-8 lg:h-9 lg:w-9" title="Barter">
+                    <Repeat className="w-3.5 h-3.5" />
+                  </Button>
+                )}
               </div>
             </Card>
           ))}
