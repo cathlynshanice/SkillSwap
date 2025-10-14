@@ -1,5 +1,6 @@
 import { Card } from "@/components/ui/card";
 import { Network, Wallet, GraduationCap } from "lucide-react";
+import AboutCharacterSwap from "@/assets/about-character-swap.svg";
 
 const DifferentSection = () => {
   const features = [
@@ -23,14 +24,14 @@ const DifferentSection = () => {
   return (
     <section id="different" className="min-h-screen flex items-center py-8 lg:py-12 bg-background">
       <div className="container mx-auto px-4 lg:px-6 xl:px-8 max-w-6xl">
-        <div>
-          <div className="animate-fade-up max-w-lg">
+        <div className="flex flex-col lg:flex-row items-center lg:items-start gap-8">
+          {/* Left: Text and Features */}
+          <div className="animate-fade-up max-w-lg w-full">
             <h2 className="text-xl lg:text-2xl xl:text-3xl font-bold mb-4 lg:mb-6">
               What Makes us
               <br />
               Different?
             </h2>
-            
             <div className="space-y-4 lg:space-y-5">
               {features.map((feature, idx) => (
                 <div 
@@ -48,6 +49,15 @@ const DifferentSection = () => {
                 </div>
               ))}
             </div>
+          </div>
+
+          <div className="w-full lg:w-full flex justify-center lg:justify-end mt-4 lg:mt-0">
+            <img
+              src={AboutCharacterSwap}
+              alt="About Character Swap"
+              className="w-full max-w-xs lg:max-w-none lg:h-[420px] xl:h-[500px] 2xl:h-[560px] h-auto"
+              style={{ objectFit: "contain" }}
+            />
           </div>
         </div>
       </div>
