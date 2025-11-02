@@ -19,154 +19,13 @@ const ProfileSettings = () => {
 
   const activities = [
     {
-      section: "Today",
-      items: [
-        {
-          icon: "book",
-          iconColor: "bg-blue-500",
-          title: "Skill Exchange Request created for Python Programming Basics",
-          time: "11:12 AM, Nov 2, 2025",
-        },
-        {
-          icon: "star",
-          iconColor: "bg-yellow-500",
-          title: "Received 5-star rating from Jessica Tan for Web Development Session",
-          time: "9:45 AM, Nov 2, 2025",
-        },
-        {
-          icon: "userplus",
-          iconColor: "bg-green-500",
-          title: "Connected with Alex Wijaya - UI/UX Design Major",
-          time: "8:30 AM, Nov 2, 2025",
-        },
-        {
-          icon: "video",
-          iconColor: "bg-red-500",
-          title: "Scheduled virtual session with Rachel Lee for Database Management",
-          time: "7:15 AM, Nov 2, 2025",
-        },
-      ],
-    },
-    {
-      section: "This week",
-      items: [
-        {
-          icon: "userplus",
-          iconColor: "bg-green-500",
-          title: "Connected with Michael Chen - Data Science Major",
-          time: "3:24 PM, Oct 31, 2025",
-        },
-        {
-          icon: "book",
-          iconColor: "bg-purple-500",
-          title: "Completed skill exchange: Mobile App Development with Sarah Lim",
-          time: "10:30 AM, Oct 30, 2025",
-        },
-        {
-          icon: "star",
-          iconColor: "bg-yellow-500",
-          title: "Received 4-star rating from Kevin Tan for Machine Learning Tutorial",
-          time: "4:20 PM, Oct 29, 2025",
-        },
-        {
-          icon: "book",
-          iconColor: "bg-blue-500",
-          title: "Started new skill exchange: Advanced JavaScript with Thomas Anderson",
-          time: "11:00 AM, Oct 29, 2025",
-        },
-        {
-          icon: "video",
-          iconColor: "bg-red-500",
-          title: "Completed virtual session with Emily Zhang on React Hooks",
-          time: "2:45 PM, Oct 28, 2025",
-        },
-        {
-          icon: "userplus",
-          iconColor: "bg-green-500",
-          title: "Connected with Amanda Santos - Graphic Design Major",
-          time: "9:00 AM, Oct 28, 2025",
-        },
-      ],
-    },
-    {
-      section: "This month",
-      items: [
-        {
-          icon: "video",
-          iconColor: "bg-red-500",
-          title: "Virtual session with David Wong for Java Programming",
-          time: "2:15 PM, Oct 28, 2025",
-        },
-        {
-          icon: "star",
-          iconColor: "bg-yellow-500",
-          title: "Received 5-star rating from Brian Johnson for Python Fundamentals",
-          time: "5:30 PM, Oct 25, 2025",
-        },
-        {
-          icon: "book",
-          iconColor: "bg-purple-500",
-          title: "Completed skill exchange: Cloud Computing Basics with Lisa Chen",
-          time: "1:20 PM, Oct 24, 2025",
-        },
-        {
-          icon: "userplus",
-          iconColor: "bg-green-500",
-          title: "Connected with Ryan Martinez - Software Engineering Major",
-          time: "10:15 AM, Oct 23, 2025",
-        },
-        {
-          icon: "video",
-          iconColor: "bg-red-500",
-          title: "Virtual session with Sophie Brown on Git and GitHub",
-          time: "3:00 PM, Oct 22, 2025",
-        },
-        {
-          icon: "book",
-          iconColor: "bg-blue-500",
-          title: "Started skill exchange: Digital Marketing with Patricia Lee",
-          time: "11:45 AM, Oct 20, 2025",
-        },
-        {
-          icon: "star",
-          iconColor: "bg-yellow-500",
-          title: "Received 5-star rating from Daniel Kim for HTML/CSS Workshop",
-          time: "4:10 PM, Oct 18, 2025",
-        },
-        {
-          icon: "userplus",
-          iconColor: "bg-green-500",
-          title: "Connected with Michelle Wong - Business Analytics Major",
-          time: "9:30 AM, Oct 17, 2025",
-        },
-      ],
-    },
-    {
-      section: "Earlier",
+      section: "Recent Activity",
       items: [
         {
           icon: "graduation",
           iconColor: "bg-indigo-500",
           title: "Joined SkillSwap - Binus University Student Network",
-          time: "9:00 AM, Oct 15, 2025",
-        },
-        {
-          icon: "book",
-          iconColor: "bg-purple-500",
-          title: "Completed profile setup and added first skill: Web Development",
-          time: "10:30 AM, Oct 15, 2025",
-        },
-        {
-          icon: "userplus",
-          iconColor: "bg-green-500",
-          title: "Connected with Jason Lee - First connection on SkillSwap",
-          time: "2:00 PM, Oct 15, 2025",
-        },
-        {
-          icon: "video",
-          iconColor: "bg-red-500",
-          title: "Attended orientation session: How to use SkillSwap effectively",
-          time: "3:30 PM, Oct 15, 2025",
+          time: "Just now",
         },
       ],
     },
@@ -174,16 +33,16 @@ const ProfileSettings = () => {
 
   const contactInfo = {
     source: "Student Registration",
-    studentId: "2502012345",
-    phone: "+62 812-3456-7890",
-    email: "jennifer.wijaya@binus.ac.id",
-    secondaryEmail: "jenny.wijaya@gmail.com",
-    location: "Jakarta, Indonesia",
+    studentId: "Not set",
+    phone: "Not set",
+    email: "Not set",
+    secondaryEmail: "",
+    location: "Not set",
     timezone: "UTC+07:00 (WIB)",
-    languages: ["Indonesian", "English"],
-    major: "Computer Science",
-    semester: "Semester 5",
-    campus: "Binus Alam Sutera",
+    languages: [] as string[],
+    major: "Not set",
+    semester: "Not set",
+    campus: "Not set",
   };
 
   const getIcon = (iconName: string) => {
@@ -214,7 +73,7 @@ const ProfileSettings = () => {
       {/* Left Sidebar Navigation */}
       <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col flex-shrink-0">
         {/* Logo Section */}
-        <div className="px-4 pt-6 pb-4 border-b border-gray-200 dark:border-gray-700">
+        <div className="px-4 pt-4 pb-4 border-b border-gray-200 dark:border-gray-700">
           <div className="flex items-center gap-2">
             <img src={SkillSwapLogo} alt="SkillSwap Logo" className="w-7 h-7" />
             <div>
@@ -245,7 +104,6 @@ const ProfileSettings = () => {
           </button>
           <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
             <MessageSquare className="h-4 w-4" /> Messages
-            <Badge variant="destructive" className="ml-auto">3</Badge>
           </button>
           <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
             <Bell className="h-4 w-4" /> Notifications
@@ -261,31 +119,19 @@ const ProfileSettings = () => {
             <p className="px-3 text-xs font-semibold text-gray-500 uppercase mb-2">Active Sessions</p>
             <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
               <Video className="h-4 w-4" /> Video Sessions
-              <Badge variant="secondary" className="ml-auto">2</Badge>
+              <Badge variant="secondary" className="ml-auto">0</Badge>
             </button>
             <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
               <CalendarDays className="h-4 w-4" /> Scheduled
-              <Badge variant="secondary" className="ml-auto">4</Badge>
+              <Badge variant="secondary" className="ml-auto">0</Badge>
             </button>
           </div>
 
           <div className="pt-4">
             <p className="px-3 text-xs font-semibold text-gray-500 uppercase mb-2">Saved Connections</p>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-left">
-              <User className="h-3 w-3" />
-              <span className="flex-1 truncate text-xs">Michael Chen</span>
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-left">
-              <User className="h-3 w-3" />
-              <span className="flex-1 truncate text-xs">Sarah Lim</span>
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 text-left">
-              <User className="h-3 w-3" />
-              <span className="flex-1 truncate text-xs">David Wong</span>
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm text-primary hover:bg-gray-100 dark:hover:bg-gray-700">
-              <Users className="h-3 w-3" /> View all
-            </button>
+            <div className="px-3 py-6 text-center">
+              <p className="text-xs text-gray-400">No connections yet</p>
+            </div>
           </div>
         </nav>
       </aside>
@@ -318,11 +164,11 @@ const ProfileSettings = () => {
               <Card className="p-6 border-0 rounded-none shadow-none">
                 {/* Profile Header */}
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-500 to-purple-600 flex-shrink-0 flex items-center justify-center text-white font-bold text-xl">
-                    JW
+                  <div className="h-14 w-14 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex-shrink-0 flex items-center justify-center text-white font-bold text-xl">
+                    ?
                   </div>
                   <div>
-                    <h2 className="font-bold text-lg">Jennifer Wijaya</h2>
+                    <h2 className="font-bold text-lg">New User</h2>
                     <Badge variant="outline" className="mt-1">
                       <GraduationCap className="h-3 w-3 mr-1" />
                       Binus University
@@ -389,8 +235,10 @@ const ProfileSettings = () => {
                       <Mail className="h-4 w-4 text-gray-400 mt-0.5" />
                       <div className="flex-1">
                         <p className="text-xs text-gray-500 mb-1">Email</p>
-                        <p className="font-medium text-primary text-sm">{contactInfo.email}</p>
-                        <p className="font-medium text-primary text-sm mt-1">{contactInfo.secondaryEmail}</p>
+                        <p className="font-medium text-sm">{contactInfo.email}</p>
+                        {contactInfo.secondaryEmail && (
+                          <p className="font-medium text-primary text-sm mt-1">{contactInfo.secondaryEmail}</p>
+                        )}
                       </div>
                       <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
                         +
@@ -421,9 +269,13 @@ const ProfileSettings = () => {
                       <div className="flex-1">
                         <p className="text-xs text-gray-500 mb-1">Language Spoken</p>
                         <div className="flex gap-2">
-                          {contactInfo.languages.map((lang, idx) => (
-                            <Badge key={idx} variant="secondary">{lang}</Badge>
-                          ))}
+                          {contactInfo.languages.length > 0 ? (
+                            contactInfo.languages.map((lang, idx) => (
+                              <Badge key={idx} variant="secondary">{lang}</Badge>
+                            ))
+                          ) : (
+                            <p className="text-sm text-gray-400">Not set</p>
+                          )}
                         </div>
                       </div>
                       <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
@@ -454,10 +306,10 @@ const ProfileSettings = () => {
                   </button>
                   <button className="flex items-center gap-2 pb-2 text-gray-500 hover:text-gray-900">
                     <Star className="h-4 w-4" />
-                    Reviews <Badge variant="secondary" className="ml-1">12</Badge>
+                    Reviews <Badge variant="secondary" className="ml-1">0</Badge>
                   </button>
                   <button className="flex items-center gap-2 pb-2 text-gray-500 hover:text-gray-900">
-                    <CalendarDays className="h-4 w-4" /> Sessions <Badge variant="secondary" className="ml-1">6</Badge>
+                    <CalendarDays className="h-4 w-4" /> Sessions <Badge variant="secondary" className="ml-1">0</Badge>
                   </button>
                 </div>
 
