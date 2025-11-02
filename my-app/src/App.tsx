@@ -39,6 +39,7 @@ import Home from "./pages/Home";
 import Landing from "./pages/Landing";
 import OnboardingPage from "@/pages/Onboarding";
 import ProfileSettings from "@/pages/ProfileSettings";
+import ProjectsShowcase from "@/pages/ProjectsShowcase";
 import AuthGate from "./components/AuthGate"; // ✅ import here
 
 const queryClient = new QueryClient();
@@ -56,6 +57,7 @@ const App = () => (
             <Route path="/landing" element={<Landing />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
             <Route path="/profile" element={<ProfileSettings />} />
+            <Route path="/projects" element={<ProjectsShowcase />} />
             <Route path="/login" element={<LoginPage />} />
             {/* <Route path="/signup" element={<SignupPage />} /> */}
             <Route path="*" element={<NotFound />} />

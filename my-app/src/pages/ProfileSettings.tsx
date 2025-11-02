@@ -1,16 +1,14 @@
-import LandingNavbar from "@/components/LandingNavbar";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
-import { ArrowLeft, CheckCircle2, Calendar, Briefcase, Phone, Mail, MapPin, Globe, Play, Pause, MoreVertical, Ticket, User, UserPlus, PhoneCall, Video, Clock, BookOpen, GraduationCap, Star, Home, Search, MessageSquare, Bell, Handshake, CalendarDays, Settings, HelpCircle, Users, Pencil } from "lucide-react";
+import { CheckCircle2, Calendar, Phone, Mail, MapPin, Globe, MoreVertical, Ticket, User, UserPlus, PhoneCall, Video, Clock, BookOpen, GraduationCap, Star, Handshake, CalendarDays, Pencil } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
-import SkillSwapLogo from "@/assets/SkillSwapLogo.svg";
+import ProfileSidebar from "@/components/ProfileSidebar";
 
 const ProfileSettings = () => {
   const [isPlaying, setIsPlaying] = useState(false);
+  const [activeTab, setActiveTab] = useState<"activity" | "skills" | "reviews" | "sessions">("activity");
   const navigate = useNavigate();
   
   useEffect(() => {
@@ -71,70 +69,7 @@ const ProfileSettings = () => {
   return (
     <div className="h-screen bg-gray-50 dark:bg-gray-900 flex overflow-hidden">
       {/* Left Sidebar Navigation */}
-      <aside className="w-64 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 flex flex-col flex-shrink-0">
-        {/* Logo Section */}
-        <div className="px-4 pt-4 pb-4 border-b border-gray-200 dark:border-gray-700">
-          <div className="flex items-center gap-2">
-            <img src={SkillSwapLogo} alt="SkillSwap Logo" className="w-7 h-7" />
-            <div>
-              <h1 className="text-lg font-bold">SkillSwap</h1>
-              <p className="text-[10px] text-muted-foreground">Learn, Share, and Swap Skills.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Search Section */}
-        <div className="px-4 pt-4 pb-4">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input
-              type="text"
-              placeholder="Search"
-              className="w-full pl-9 pr-3 py-2 text-sm border rounded-md"
-            />
-          </div>
-        </div>
-
-        <nav className="flex-1 px-2 py-2 space-y-1">
-          <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md bg-gray-100 dark:bg-gray-700">
-            <User className="h-4 w-4" /> My Profile
-          </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-            <BookOpen className="h-4 w-4" /> My Skills
-          </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-            <MessageSquare className="h-4 w-4" /> Messages
-          </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-            <Bell className="h-4 w-4" /> Notifications
-          </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-            <Handshake className="h-4 w-4" /> Exchange Requests
-          </button>
-          <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-            <Star className="h-4 w-4" /> Reviews & Ratings
-          </button>
-
-          <div className="pt-4">
-            <p className="px-3 text-xs font-semibold text-gray-500 uppercase mb-2">Active Sessions</p>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-              <Video className="h-4 w-4" /> Video Sessions
-              <Badge variant="secondary" className="ml-auto">0</Badge>
-            </button>
-            <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-              <CalendarDays className="h-4 w-4" /> Scheduled
-              <Badge variant="secondary" className="ml-auto">0</Badge>
-            </button>
-          </div>
-
-          <div className="pt-4">
-            <p className="px-3 text-xs font-semibold text-gray-500 uppercase mb-2">Saved Connections</p>
-            <div className="px-3 py-6 text-center">
-              <p className="text-xs text-gray-400">No connections yet</p>
-            </div>
-          </div>
-        </nav>
-      </aside>
+      <ProfileSidebar />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
@@ -295,47 +230,115 @@ const ProfileSettings = () => {
             <div className="flex-1 bg-white dark:bg-gray-800 overflow-y-auto">
               <div className="p-6">
                 {/* Header Tabs */}
-                <div className="flex items-center gap-6 border-b pb-4 mb-6">
-                  <button className="flex items-center gap-2 pb-2 border-b-2 border-primary text-primary font-medium">
+                <div className="flex items-center gap-1 border-b border-gray-200 dark:border-gray-700 mb-6">
+                  <button 
+                    onClick={() => setActiveTab("activity")}
+                    className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all ${
+                      activeTab === "activity" 
+                        ? "border-primary bg-gray-50 dark:bg-gray-700/50 text-primary" 
+                        : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/30"
+                    }`}
+                  >
                     <CheckCircle2 className="h-4 w-4" />
                     Activity
                   </button>
-                  <button className="flex items-center gap-2 pb-2 text-gray-500 hover:text-gray-900">
+                  <button 
+                    onClick={() => setActiveTab("skills")}
+                    className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all ${
+                      activeTab === "skills" 
+                        ? "border-primary bg-gray-50 dark:bg-gray-700/50 text-primary" 
+                        : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/30"
+                    }`}
+                  >
                     <BookOpen className="h-4 w-4" />
                     Skills Offered
                   </button>
-                  <button className="flex items-center gap-2 pb-2 text-gray-500 hover:text-gray-900">
+                  <button 
+                    onClick={() => setActiveTab("reviews")}
+                    className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all ${
+                      activeTab === "reviews" 
+                        ? "border-primary bg-gray-50 dark:bg-gray-700/50 text-primary" 
+                        : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/30"
+                    }`}
+                  >
                     <Star className="h-4 w-4" />
                     Reviews <Badge variant="secondary" className="ml-1">0</Badge>
                   </button>
-                  <button className="flex items-center gap-2 pb-2 text-gray-500 hover:text-gray-900">
+                  <button 
+                    onClick={() => setActiveTab("sessions")}
+                    className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all ${
+                      activeTab === "sessions" 
+                        ? "border-primary bg-gray-50 dark:bg-gray-700/50 text-primary" 
+                        : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/30"
+                    }`}
+                  >
                     <CalendarDays className="h-4 w-4" /> Sessions <Badge variant="secondary" className="ml-1">0</Badge>
                   </button>
                 </div>
 
-                {/* Activity Timeline */}
+                {/* Tab Content */}
                 <div className="space-y-6">
-                  {activities.map((section, sectionIdx) => (
-                    <div key={sectionIdx}>
-                      <h3 className="font-semibold mb-4 text-lg">{section.section}</h3>
-                      <div className="space-y-4">
-                        {section.items.map((activity, activityIdx) => (
-                          <div key={activityIdx} className="flex gap-3">
-                            <div className={`flex-shrink-0 h-8 w-8 rounded-full ${activity.iconColor} flex items-center justify-center mt-1`}>
-                              {getIcon(activity.icon)}
-                            </div>
-                            <div className="flex-1">
-                              <p className="text-sm">
-                                <span className="font-medium">{activity.title.split(' ')[0]}</span>
-                                {' '}{activity.title.substring(activity.title.indexOf(' ') + 1)}
-                              </p>
-                              <p className="text-xs text-gray-500 mt-1">• {activity.time}</p>
-                            </div>
+                  {activeTab === "activity" && (
+                    <>
+                      {activities.map((section, sectionIdx) => (
+                        <div key={sectionIdx}>
+                          <h3 className="font-semibold mb-4 text-lg">{section.section}</h3>
+                          <div className="space-y-4">
+                            {section.items.map((activity, activityIdx) => (
+                              <div key={activityIdx} className="flex gap-3">
+                                <div className={`flex-shrink-0 h-8 w-8 rounded-full ${activity.iconColor} flex items-center justify-center mt-1`}>
+                                  {getIcon(activity.icon)}
+                                </div>
+                                <div className="flex-1">
+                                  <p className="text-sm">
+                                    <span className="font-medium">{activity.title.split(' ')[0]}</span>
+                                    {' '}{activity.title.substring(activity.title.indexOf(' ') + 1)}
+                                  </p>
+                                  <p className="text-xs text-gray-500 mt-1">• {activity.time}</p>
+                                </div>
+                              </div>
+                            ))}
                           </div>
-                        ))}
-                      </div>
+                        </div>
+                      ))}
+                    </>
+                  )}
+
+                  {activeTab === "skills" && (
+                    <div className="text-center py-12">
+                      <BookOpen className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">No Skills Added Yet</h3>
+                      <p className="text-sm text-gray-500 mb-6">Start building your profile by adding skills you can offer or want to learn.</p>
+                      <Button>
+                        <BookOpen className="h-4 w-4 mr-2" />
+                        Add Your First Skill
+                      </Button>
                     </div>
-                  ))}
+                  )}
+
+                  {activeTab === "reviews" && (
+                    <div className="text-center py-12">
+                      <Star className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">No Reviews Yet</h3>
+                      <p className="text-sm text-gray-500 mb-6">Reviews from your skill exchange sessions will appear here.</p>
+                      <Button variant="outline">
+                        <Handshake className="h-4 w-4 mr-2" />
+                        Start Your First Exchange
+                      </Button>
+                    </div>
+                  )}
+
+                  {activeTab === "sessions" && (
+                    <div className="text-center py-12">
+                      <CalendarDays className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+                      <h3 className="text-lg font-semibold mb-2">No Sessions Scheduled</h3>
+                      <p className="text-sm text-gray-500 mb-6">Your upcoming and past skill exchange sessions will be displayed here.</p>
+                      <Button variant="outline">
+                        <Video className="h-4 w-4 mr-2" />
+                        Schedule a Session
+                      </Button>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
