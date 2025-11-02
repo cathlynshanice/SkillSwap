@@ -58,11 +58,15 @@ const ProfileSidebar = () => {
         <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
           <MessageSquare className="h-4 w-4" /> Messages
         </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+        <button 
+          onClick={() => navigate('/notifications')}
+          className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md ${
+            isActive('/notifications') 
+              ? 'bg-gray-100 dark:bg-gray-700' 
+              : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+          }`}
+        >
           <Bell className="h-4 w-4" /> Notifications
-        </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
-          <Handshake className="h-4 w-4" /> Exchange Requests
         </button>
         <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
           <Star className="h-4 w-4" /> Reviews & Ratings
