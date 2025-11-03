@@ -108,13 +108,6 @@ All colors MUST be HSL.
   }
   
   html {
-    scroll-snap-type: y mandatory;
     scroll-behavior: smooth;
-  }
-  
-  section,
-  footer {
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
   }
 }
