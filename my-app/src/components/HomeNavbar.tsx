@@ -22,8 +22,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { useNavigate } from "react-router-dom";
+import { setUserRole } from "@/lib/userContext";
 
-const LandingNavbar = () => {
+const HomeNavbar = () => {
+  const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [scrollTimeout, setScrollTimeout] = useState<NodeJS.Timeout | null>(null);
@@ -154,11 +157,27 @@ const LandingNavbar = () => {
 
                 {/* Menu Items */}
                 <div className="mt-6 space-y-1">
-                  <Button variant="ghost" className="w-full justify-start text-left hover:bg-accent" asChild>
-                    <a href="/profile">
-                      <User className="mr-2 h-4 w-4" />
-                      Profile
-                    </a>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start text-left hover:bg-accent"
+                    onClick={() => {
+                      setUserRole("buyer");
+                      navigate("/profile");
+                    }}
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    Buyer Profile
+                  </Button>
+                  <Button 
+                    variant="ghost" 
+                    className="w-full justify-start text-left hover:bg-accent"
+                    onClick={() => {
+                      setUserRole("seller");
+                      navigate("/seller-profile");
+                    }}
+                  >
+                    <User className="mr-2 h-4 w-4" />
+                    Seller Profile
                   </Button>
                   <Button variant="ghost" className="w-full justify-start text-left hover:bg-accent" asChild>
                     <a href="/settings">
@@ -189,4 +208,4 @@ const LandingNavbar = () => {
   );
 };
 
-export default LandingNavbar;
+export default HomeNavbar;

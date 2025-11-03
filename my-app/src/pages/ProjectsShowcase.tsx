@@ -42,19 +42,36 @@ const ProjectsShowcase = () => {
         </header>
 
         {/* Content */}
-        <div className="flex-1 overflow-y-auto">
+        <div className="flex-1 bg-white dark:bg-gray-800 overflow-y-auto">
           <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <div>
+                <h3 className="text-lg font-semibold">Projects Showcase</h3>
+                <p className="text-sm text-gray-500">Display your portfolio to potential buyers</p>
+              </div>
+              <Button disabled>
+                <Briefcase className="h-4 w-4 mr-2" />
+                Add Project
+              </Button>
+            </div>
+
+            {/* Empty Project Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+              {[1, 2, 3].map((i) => (
+                <Card key={i} className="overflow-hidden">
+                  <div className="aspect-video bg-gray-200 dark:bg-gray-700 animate-pulse"></div>
+                  <div className="p-4 space-y-2">
+                    <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-2/3"></div>
+                  </div>
+                </Card>
+              ))}
+            </div>
+
             {projects.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-20">
-                <Briefcase className="h-20 w-20 text-gray-300 dark:text-gray-600 mb-6" />
-                <h3 className="text-2xl font-semibold mb-3">No Projects Yet</h3>
-                <p className="text-gray-500 mb-8 text-center max-w-md">
-                  Start showcasing your work! Add your personal projects, college assignments, or collaborations from SkillSwap.
-                </p>
-                <Button size="lg">
-                  <Plus className="h-5 w-5 mr-2" />
-                  Add Your First Project
-                </Button>
+              <div className="text-center py-12">
+                <Briefcase className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+                <p className="text-sm text-gray-500">No projects showcased yet</p>
               </div>
             ) : (
               <>

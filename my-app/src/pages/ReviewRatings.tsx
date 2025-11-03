@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { 
   Star, Heart, ThumbsUp, Flag, MessageSquare, Upload, X, 
   TrendingUp, Filter, Download, Search, Edit, 
-  CheckCircle, Clock, DollarSign, BarChart3, Eye, ChevronDown, ChevronUp
+  CheckCircle, Clock, DollarSign, BarChart3, Eye, ChevronDown, ChevronUp, MoreVertical
 } from "lucide-react";
 import { useEffect, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
@@ -298,24 +298,77 @@ const ReviewRatings = () => {
       <ProfileSidebar />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col h-screen overflow-hidden">
         {/* Top Header */}
-        <div className="border-b border-gray-200 dark:border-gray-700 px-6 py-4 bg-white dark:bg-gray-800">
-          <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-3 flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center gap-2 text-sm">
             <button 
               onClick={() => navigate('/home')}
-              className="hover:text-blue-600 dark:hover:text-blue-400"
+              className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
             >
               Home
             </button>
-            <span>/</span>
-            <span className="text-gray-900 dark:text-white font-medium">Reviews & Ratings</span>
+            <span className="text-gray-400">/</span>
+            <span className="text-gray-900 dark:text-gray-100 font-medium">Reviews & Ratings</span>
           </div>
-        </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
+          </div>
+        </header>
 
         {/* Main Content - Scrollable */}
-        <div className="flex-1 overflow-y-auto bg-white dark:bg-gray-800">
-          {/* Content will be added here later */}
+        <div className="flex-1 bg-white dark:bg-gray-800 overflow-y-auto">
+          <div className="p-6">
+            <div className="space-y-6">
+              {/* Stats Cards */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <Card className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-500">Average Rating</span>
+                    <Star className="h-4 w-4 text-yellow-400" />
+                  </div>
+                  <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </Card>
+                <Card className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-500">Total Reviews</span>
+                    <MessageSquare className="h-4 w-4 text-blue-400" />
+                  </div>
+                  <div className="h-8 w-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </Card>
+                <Card className="p-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <span className="text-sm text-gray-500">Response Rate</span>
+                    <TrendingUp className="h-4 w-4 text-green-400" />
+                  </div>
+                  <div className="h-8 w-16 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                </Card>
+              </div>
+
+              {/* Chart Placeholders */}
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-4">Rating Distribution</h3>
+                <div className="h-64 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                  <div className="text-center">
+                    <BarChart3 className="h-12 w-12 mx-auto text-gray-400 mb-2" />
+                    <p className="text-sm text-gray-400">No review data available yet</p>
+                  </div>
+                </div>
+              </Card>
+
+              <Card className="p-6">
+                <h3 className="text-lg font-semibold mb-4">Ratings Over Time</h3>
+                <div className="h-64 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                  <div className="text-center">
+                    <TrendingUp className="h-12 w-12 mx-auto text-gray-400 mb-2" />
+                    <p className="text-sm text-gray-400">Chart will appear once data is available</p>
+                  </div>
+                </div>
+              </Card>
+            </div>
+          </div>
         </div>
       </div>
       
