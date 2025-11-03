@@ -1,4 +1,4 @@
-import LandingNavbar from "@/components/LandingNavbar";
+import HomeNavbar from "@/components/HomeNavbar";
 import Footer from "@/components/Footer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle, X } from "lucide-react";
@@ -11,7 +11,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-background">
-      <LandingNavbar />
+      <HomeNavbar />
       
       {/* Reminder Alert - Red Box */}
       {showReminder && isProfileIncomplete && (
