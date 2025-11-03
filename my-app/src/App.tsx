@@ -41,6 +41,7 @@ import OnboardingPage from "@/pages/Onboarding";
 import ProfileSettings from "@/pages/ProfileSettings";
 import ProjectsShowcase from "@/pages/ProjectsShowcase";
 import Notifications from "@/pages/Notifications";
+import ReviewRatings from "@/pages/ReviewRatings";
 import AuthGate from "./components/AuthGate"; // ✅ import here
 
 const queryClient = new QueryClient();
@@ -60,6 +61,7 @@ const App = () => (
             <Route path="/profile" element={<ProfileSettings />} />
             <Route path="/projects" element={<ProjectsShowcase />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/reviews" element={<ReviewRatings />} />
             <Route path="/login" element={<LoginPage />} />
             {/* <Route path="/signup" element={<SignupPage />} /> */}
             <Route path="*" element={<NotFound />} />

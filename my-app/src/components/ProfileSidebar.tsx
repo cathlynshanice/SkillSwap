@@ -1,4 +1,4 @@
-import { Badge } from "@/components/ui/badge";
+  import { Badge } from "@/components/ui/badge";
 import { User, Briefcase, MessageSquare, Bell, Handshake, Star, Video, CalendarDays, Search } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import SkillSwapLogo from "@/assets/SkillSwapLogo.svg";
@@ -68,7 +68,14 @@ const ProfileSidebar = () => {
         >
           <Bell className="h-4 w-4" /> Notifications
         </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md hover:bg-gray-100 dark:hover:bg-gray-700">
+        <button 
+          onClick={() => navigate('/reviews')}
+          className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md ${
+            isActive('/reviews') 
+              ? 'bg-gray-100 dark:bg-gray-700' 
+              : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+          }`}
+        >
           <Star className="h-4 w-4" /> Reviews & Ratings
         </button>
 
