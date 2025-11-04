@@ -38,9 +38,13 @@ import LoginPage from "./pages/Login";
 import Home from "./pages/Home";
 import Landing from "./pages/Landing";
 import OnboardingPage from "@/pages/Onboarding";
-import ProfileSettings from "@/pages/ProfileSettings";
+import BuyerProfile from "@/pages/BuyerProfile";
+import SellerProfile from "@/pages/SellerProfile";
 import ProjectsShowcase from "@/pages/ProjectsShowcase";
 import Notifications from "@/pages/Notifications";
+import ReviewRatings from "@/pages/ReviewRatings";
+import Messages from "@/pages/Messages";
+import SellerInsights from "@/pages/SellerInsights";
 import AuthGate from "./components/AuthGate"; // ✅ import here
 
 const queryClient = new QueryClient();
@@ -57,9 +61,13 @@ const App = () => (
             <Route path="/home" element={<Home />} />
             <Route path="/landing" element={<Landing />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
-            <Route path="/profile" element={<ProfileSettings />} />
+            <Route path="/profile" element={<BuyerProfile />} />
+            <Route path="/seller-profile" element={<SellerProfile />} />
             <Route path="/projects" element={<ProjectsShowcase />} />
             <Route path="/notifications" element={<Notifications />} />
+            <Route path="/reviews" element={<ReviewRatings />} />
+            <Route path="/messages" element={<Messages />} />
+            <Route path="/seller-insights" element={<SellerInsights />} />
             <Route path="/login" element={<LoginPage />} />
             {/* <Route path="/signup" element={<SignupPage />} /> */}
             <Route path="*" element={<NotFound />} />
