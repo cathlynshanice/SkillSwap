@@ -40,7 +40,6 @@ const SellerProfile = () => {
     email: "Not set",
     secondaryEmail: "",
     location: "Not set",
-    timezone: "UTC+07:00 (WIB)",
     languages: [] as string[],
     major: "Not set",
     semester: "Not set",
@@ -193,14 +192,6 @@ const SellerProfile = () => {
                       <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
                         +
                       </Button>
-                    </div>
-
-                    <div className="flex items-start gap-2">
-                      <Clock className="h-4 w-4 text-gray-400 mt-0.5" />
-                      <div className="flex-1">
-                        <p className="text-xs text-gray-500 mb-1">Timezone</p>
-                        <p className="font-medium">{contactInfo.timezone}</p>
-                      </div>
                     </div>
 
                     <div className="flex items-start gap-2">

@@ -10,29 +10,75 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileSidebar from "@/components/ProfileSidebar";
 import { setUserRole } from "@/lib/userContext";
+import { supabase } from "@/lib/SupabaseClient";
 
 // Set role IMMEDIATELY before component renders
 setUserRole("buyer");
 
+interface ProfileData {
+  name: string;
+  student_id: string;
+  email: string;
+  secondary_email: string | null;
+  phone: string;
+  major: string;
+  semester: string;
+  campus: string;
+  location: string;
+  languages: string[];
+  bio: string | null;
+}
+
 const BuyerProfile = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "sessions" | "settings">("profile");
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   
   useEffect(() => {
     window.scrollTo(0, 0);
+    fetchProfileData();
   }, []);
 
+  const fetchProfileData = async () => {
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
+        console.error("No authenticated user");
+        setLoading(false);
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("*")
+        .eq("id", user.id)
+        .single();
+
+      if (error) {
+        console.error("Error fetching profile:", error);
+      } else {
+        setProfileData(data);
+      }
+    } catch (error) {
+      console.error("Error:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const contactInfo = {
-    studentId: "Not set",
-    phone: "Not set",
-    email: "Not set",
-    secondaryEmail: "",
-    location: "Not set",
-    timezone: "UTC+07:00 (WIB)",
-    languages: [] as string[],
-    major: "Not set",
-    semester: "Not set",
-    campus: "Not set",
+    name: profileData?.name || "Not set",
+    studentId: profileData?.student_id || "Not set",
+    phone: profileData?.phone || "Not set",
+    email: profileData?.email || "Not set",
+    secondaryEmail: profileData?.secondary_email || "",
+    location: profileData?.location || "Not set",
+    languages: profileData?.languages || [],
+    major: profileData?.major || "Not set",
+    semester: profileData?.semester || "Not set",
+    campus: profileData?.campus || "Not set",
+    bio: profileData?.bio || "",
   };
 
   return (
@@ -68,14 +114,14 @@ const BuyerProfile = () => {
             <Card className="p-6 border-0 rounded-none shadow-none">
               {/* Profile Header */}
               <div className="flex items-center gap-3 mb-6">
-                <div className="h-14 w-14 rounded-full bg-gradient-to-br from-gray-300 to-gray-400 flex-shrink-0 flex items-center justify-center text-white font-bold text-xl">
-                  ?
+                <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex-shrink-0 flex items-center justify-center text-white font-bold text-xl">
+                  {loading ? "?" : contactInfo.name.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <h2 className="font-bold text-lg">New User</h2>
+                  <h2 className="font-bold text-lg">{loading ? "Loading..." : contactInfo.name}</h2>
                   <Badge variant="outline" className="mt-1">
                     <GraduationCap className="h-3 w-3 mr-1" />
-                    Binus University
+                    {loading ? "..." : contactInfo.campus}
                   </Badge>
                 </div>
               </div>
@@ -161,14 +207,6 @@ const BuyerProfile = () => {
                   </div>
 
                   <div className="flex items-start gap-2">
-                    <Clock className="h-4 w-4 text-gray-400 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="text-xs text-gray-500 mb-1">Timezone</p>
-                      <p className="font-medium">{contactInfo.timezone}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2">
                     <Globe className="h-4 w-4 text-gray-400 mt-0.5" />
                     <div className="flex-1">
                       <p className="text-xs text-gray-500 mb-1">Language Spoken</p>
@@ -249,20 +287,21 @@ const BuyerProfile = () => {
                         </Button>
                       </div>
                       <div className="space-y-3">
-                        <div className="h-20 bg-gray-100 dark:bg-gray-700 rounded animate-pulse"></div>
-                        <p className="text-xs text-gray-400">Tell others about yourself</p>
+                        {loading ? (
+                          <div className="h-20 bg-gray-100 dark:bg-gray-700 rounded animate-pulse"></div>
+                        ) : contactInfo.bio ? (
+                          <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
+                            {contactInfo.bio}
+                          </p>
+                        ) : (
+                          <div className="h-20 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                            <p className="text-xs text-gray-400">No bio added yet</p>
+                          </div>
+                        )}
+                        {!contactInfo.bio && !loading && (
+                          <p className="text-xs text-gray-400">Tell others about yourself</p>
+                        )}
                       </div>
-                    </Card>
-
-                    {/* Interests & Skills */}
-                    <Card className="p-6">
-                      <h3 className="text-lg font-semibold mb-4">My Interests</h3>
-                      <div className="grid grid-cols-2 gap-4">
-                        {[1, 2, 3, 4].map((i) => (
-                          <div key={i} className="h-12 bg-gray-100 dark:bg-gray-700 rounded animate-pulse"></div>
-                        ))}
-                      </div>
-                      <p className="text-xs text-gray-400 mt-3">Skills you want to learn or exchange</p>
                     </Card>
 
                     {/* Purchase History */}
