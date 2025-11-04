@@ -66,6 +66,18 @@ const ProfileSidebar = () => {
           </button>
         )}
         {userIsSeller && (
+          <button
+            onClick={() => navigate('/browse-contributors')}
+            className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md ${
+              isActive('/contributors')
+                ? 'bg-gray-100 dark:bg-gray-700'
+                : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+            }`}
+          >
+            <Search className="h-4 w-4" /> Browse Contributors
+          </button>
+        )}
+        {userIsSeller && (
           <button 
             onClick={() => navigate('/reviews')}
             className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md ${
