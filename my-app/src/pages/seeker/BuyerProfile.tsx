@@ -2,62 +2,230 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
-  User, Calendar, MapPin, Phone, Mail, Globe, Clock, GraduationCap,
-  Pencil, MoreVertical, CheckCircle2, CalendarDays, Video, Settings,
-  ShoppingBag, Heart, Star
+  User, Calendar, MapPin, Phone, Mail, Globe, GraduationCap,
+  Pencil, MoreVertical, CalendarDays, Video, Settings,
+  ShoppingBag, Heart, Edit
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileSidebar from "@/components/ProfileSidebar";
 import { supabase } from "@/lib/SupabaseClient";
+import { Textarea } from "@/components/ui/textarea";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Switch } from "@/components/ui/switch";
+import { setUserRole } from "@/lib/userContext";
+
+// --- Data Type Interfaces ---
+interface ProfileData {
+  id: string;
+  name: string;
+  student_id: string;
+  secondary_email: string | null;
+  phone: string | null;
+  major: string | null;
+  semester: string | null;
+  campus: string | null;
+  location: string | null;
+  languages: string[];
+  bio: string | null;
+}
+
+interface Service {
+  id: number;
+  title: string;
+  description: string;
+}
+
+interface Purchase {
+  id: number;
+  amount: number;
+  purchase_datetime: string;
+  services: Service | null;
+}
+
+interface Session {
+  id: number;
+  session_datetime: string;
+  meeting_link: string | null;
+  services: Service | null;
+}
+
+interface WishlistItem {
+  services: Service | null;
+}
+
+interface UserSettings {
+  email_notifications_enabled: boolean;
+  session_reminders_enabled: boolean;
+  profile_visibility: string;
+}
 
 const BuyerProfile = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "sessions" | "settings">("profile");
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [purchases, setPurchases] = useState<Purchase[]>([]);
+  const [sessions, setSessions] = useState<Session[]>([]);
+  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
+  const [settings, setSettings] = useState<UserSettings | null>(null);
+
+  const [loading, setLoading] = useState({
+    profile: true,
+    purchases: true,
+    sessions: true,
+    wishlist: true,
+    settings: true,
+  });
+
+  const [isEditingBio, setIsEditingBio] = useState(false);
+  const [bioContent, setBioContent] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetchProfileData();
+    // Set role IMMEDIATELY before component renders
+    setUserRole("buyer");
+    
     // Optional: dev-only quick override via URL param ?as=buyer
     if (import.meta.env.DEV && new URLSearchParams(window.location.search).get("as") === "buyer") {
-      import("@/lib/userContext").then((mod) => mod.setUserRole("buyer"));
+        import("@/lib/userContext").then((mod) => mod.setUserRole("buyer"));
     }
-  }, []);
 
-  const fetchProfileData = async () => {
-    try {
+    const fetchAllData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        setLoading(false);
+        Object.keys(loading).forEach(key => setLoading(prev => ({...prev, [key]: false})));
         return;
       }
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-      if (!error) setProfileData(data);
+      
+      setUserEmail(user.email || "No primary email");
+
+      // Fetch all data in parallel
+      await Promise.all([
+        fetchProfileData(user.id),
+        fetchPurchases(user.id),
+        fetchSessions(user.id),
+        fetchWishlist(user.id),
+        fetchSettings(user.id)
+      ]);
+    };
+
+    fetchAllData();
+  }, []);
+
+  const fetchProfileData = async (userId: string) => {
+    try {
+      const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single();
+      if (error) throw error;
+      setProfileData(data);
+      setBioContent(data.bio || "");
     } catch (error) {
-      // handle error
+      console.error("Error fetching profile:", error);
     } finally {
-      setLoading(false);
+      setLoading(prev => ({ ...prev, profile: false }));
     }
   };
 
-  const contactInfo = {
-    name: profileData?.name || "Not set",
-    studentId: profileData?.student_id || "Not set",
-    phone: profileData?.phone || "Not set",
-    email: profileData?.email || "Not set",
-    secondaryEmail: profileData?.secondary_email || "",
-    location: profileData?.location || "Not set",
-    languages: profileData?.languages || [],
-    major: profileData?.major || "Not set",
-    semester: profileData?.semester || "Not set",
-    campus: profileData?.campus || "Not set",
-    bio: profileData?.bio || "",
+  const fetchPurchases = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("purchases")
+        .select(`id, amount, purchase_datetime, services (id, title)`)
+        .eq("buyer_id", userId)
+        .order("purchase_datetime", { ascending: false })
+        .limit(3);
+      if (error) throw error;
+      setPurchases(data as unknown as Purchase[]);
+    } catch (error) {
+      console.error("Error fetching purchases:", error);
+    } finally {
+      setLoading(prev => ({ ...prev, purchases: false }));
+    }
+  };
+
+  const fetchSessions = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("sessions")
+        .select(`id, session_datetime, meeting_link, services (id, title)`)
+        .eq("buyer_id", userId)
+        .order("session_datetime", { ascending: true });
+      if (error) throw error;
+      setSessions(data as unknown as Session[]);
+    } catch (error) {
+      console.error("Error fetching sessions:", error);
+    } finally {
+      setLoading(prev => ({ ...prev, sessions: false }));
+    }
+  };
+
+  const fetchWishlist = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("wishlist_items")
+        .select(`services (id, title, description)`)
+        .eq("user_id", userId);
+      if (error) throw error;
+      setWishlist(data as unknown as WishlistItem[]);
+    } catch (error) {
+      console.error("Error fetching wishlist:", error);
+    } finally {
+      setLoading(prev => ({ ...prev, wishlist: false }));
+    }
+  };
+  
+  const fetchSettings = async (userId: string) => {
+    try {
+      const { data, error } = await supabase.from("user_settings").select("*").eq("user_id", userId).single();
+      if (error) throw error;
+      setSettings(data);
+    } catch (error) {
+      console.error("Error fetching settings:", error);
+    } finally {
+      setLoading(prev => ({ ...prev, settings: false }));
+    }
+  };
+
+  const handleSaveBio = async () => {
+    if (!profileData) return;
+    try {
+      const { data, error } = await supabase
+        .from('profiles')
+        .update({ bio: bioContent })
+        .eq('id', profileData.id)
+        .select()
+        .single();
+      
+      if (error) throw error;
+
+      setProfileData(data);
+      setIsEditingBio(false);
+    } catch (error) {
+      console.error("Error updating bio:", error);
+    }
+  };
+  
+  const handleSettingsChange = async (key: keyof UserSettings, value: any) => {
+    if (!settings || !profileData) return;
+  
+    const newSettings = { ...settings, [key]: value };
+    setSettings(newSettings);
+  
+    try {
+      const { error } = await supabase
+        .from('user_settings')
+        .update({ [key]: value })
+        .eq('user_id', profileData.id);
+  
+      if (error) {
+        // Revert on failure
+        setSettings(settings);
+        throw error;
+      }
+    } catch(error) {
+       console.error(`Error updating setting ${key}:`, error);
+    }
   };
 
   return (
@@ -94,13 +262,13 @@ const BuyerProfile = () => {
               {/* Profile Header */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex-shrink-0 flex items-center justify-center text-white font-bold text-xl">
-                  {loading ? "?" : contactInfo.name.charAt(0).toUpperCase()}
+                  {loading.profile ? <Skeleton className="h-14 w-14 rounded-full" /> : profileData?.name.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <h2 className="font-bold text-lg">{loading ? "Loading..." : contactInfo.name}</h2>
+                  <h2 className="font-bold text-lg">{loading.profile ? <Skeleton className="h-5 w-32" /> : profileData?.name}</h2>
                   <Badge variant="outline" className="mt-1">
                     <GraduationCap className="h-3 w-3 mr-1" />
-                    {loading ? "..." : contactInfo.campus}
+                    {loading.profile ? "..." : profileData?.campus || "N/A"}
                   </Badge>
                 </div>
               </div>
@@ -115,83 +283,64 @@ const BuyerProfile = () => {
                     <Pencil className="h-3.5 w-3.5 text-gray-500 hover:text-gray-900" />
                   </Button>
                 </div>
-
+                {loading.profile ? (
+                  <div className="space-y-4">
+                    {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-10 w-full" />)}
+                  </div>
+                ) : profileData ? (
                 <div className="space-y-3">
                   <div className="flex items-start gap-2">
                     <User className="h-4 w-4 text-gray-400 mt-0.5" />
-                    <div className="flex-1">
+                    <div>
                       <p className="text-xs text-gray-500 mb-1">Student ID</p>
-                      <p className="font-medium">{contactInfo.studentId}</p>
+                      <p className="font-medium">{profileData.student_id}</p>
                     </div>
                   </div>
-
-                  <div className="flex items-start gap-2">
-                    <GraduationCap className="h-4 w-4 text-gray-400 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="text-xs text-gray-500 mb-1">Major</p>
-                      <p className="font-medium">{contactInfo.major}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2">
-                    <Calendar className="h-4 w-4 text-gray-400 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="text-xs text-gray-500 mb-1">Current Semester</p>
-                      <Badge variant="secondary">{contactInfo.semester}</Badge>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2">
-                    <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="text-xs text-gray-500 mb-1">Campus</p>
-                      <p className="font-medium">{contactInfo.campus}</p>
-                    </div>
-                  </div>
-
-                  <div className="flex items-start gap-2">
-                    <Phone className="h-4 w-4 text-gray-400 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="text-xs text-gray-500 mb-1">Phone number</p>
-                      <p className="font-medium">{contactInfo.phone}</p>
-                    </div>
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                      +
-                    </Button>
-                  </div>
-
                   <div className="flex items-start gap-2">
                     <Mail className="h-4 w-4 text-gray-400 mt-0.5" />
-                    <div className="flex-1">
+                    <div>
                       <p className="text-xs text-gray-500 mb-1">Email</p>
-                      <p className="font-medium text-sm">{contactInfo.email}</p>
-                      {contactInfo.secondaryEmail && (
-                        <p className="font-medium text-primary text-sm mt-1">{contactInfo.secondaryEmail}</p>
+                      <p className="font-medium text-sm">{userEmail}</p>
+                      {profileData.secondary_email && (
+                        <p className="font-medium text-primary text-sm mt-1">{profileData.secondary_email}</p>
                       )}
                     </div>
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                      +
-                    </Button>
                   </div>
-
+                  <div className="flex items-start gap-2">
+                    <Phone className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Phone</p>
+                      <p className="font-medium">{profileData.phone || "Not set"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <GraduationCap className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Major</p>
+                      <p className="font-medium">{profileData.major || "Not set"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
+                    <Calendar className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Semester</p>
+                      <p className="font-medium">{profileData.semester || "Not set"}</p>
+                    </div>
+                  </div>
                   <div className="flex items-start gap-2">
                     <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="text-xs text-gray-500 mb-1">Location</p>
-                      <p className="font-medium">{contactInfo.location}</p>
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Campus</p>
+                      <p className="font-medium">{profileData.campus || "Not set"}</p>
                     </div>
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                      +
-                    </Button>
                   </div>
-
                   <div className="flex items-start gap-2">
                     <Globe className="h-4 w-4 text-gray-400 mt-0.5" />
-                    <div className="flex-1">
-                      <p className="text-xs text-gray-500 mb-1">Language Spoken</p>
-                      <div className="flex gap-2">
-                        {contactInfo.languages.length > 0 ? (
-                          contactInfo.languages.map((lang, idx) => (
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Languages</p>
+                      <div className="flex flex-wrap gap-2">
+                        {profileData.languages?.length > 0 ? (
+                          profileData.languages.map((lang, idx) => (
                             <Badge key={idx} variant="secondary">{lang}</Badge>
                           ))
                         ) : (
@@ -199,15 +348,9 @@ const BuyerProfile = () => {
                         )}
                       </div>
                     </div>
-                    <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                      +
-                    </Button>
                   </div>
                 </div>
-
-                <Button variant="ghost" className="w-full text-sm text-gray-600 mt-4">
-                  + Add Description
-                </Button>
+                ) : <p className="text-sm text-red-500">Could not load profile data.</p>}
               </div>
             </Card>
           </div>
@@ -237,7 +380,7 @@ const BuyerProfile = () => {
                   }`}
                 >
                   <CalendarDays className="h-4 w-4" />
-                  Sessions <Badge variant="secondary" className="ml-1">0</Badge>
+                  Sessions <Badge variant="secondary" className="ml-1">{sessions.length}</Badge>
                 </button>
                 <button
                   onClick={() => setActiveTab("settings")}
@@ -261,164 +404,196 @@ const BuyerProfile = () => {
                     <Card className="p-6">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold">About Me</h3>
-                        <Button variant="ghost" size="sm" disabled>
-                          <Pencil className="h-4 w-4" />
-                        </Button>
+                        {!isEditingBio && (
+                          <Button variant="ghost" size="sm" onClick={() => setIsEditingBio(true)}>
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                        )}
                       </div>
-                      <div className="space-y-3">
-                        {loading ? (
-                          <div className="h-20 bg-gray-100 dark:bg-gray-700 rounded animate-pulse"></div>
-                        ) : contactInfo.bio ? (
-                          <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap">
-                            {contactInfo.bio}
-                          </p>
-                        ) : (
-                          <div className="h-20 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
-                            <p className="text-xs text-gray-400">No bio added yet</p>
+                      {loading.profile ? (
+                        <Skeleton className="h-24 w-full" />
+                      ) : isEditingBio ? (
+                        <div className="space-y-3">
+                          <Textarea
+                            value={bioContent}
+                            onChange={(e) => setBioContent(e.target.value)}
+                            placeholder="Tell others about yourself..."
+                            className="min-h-[100px]"
+                          />
+                          <div className="flex justify-end gap-2">
+                            <Button variant="ghost" onClick={() => { setIsEditingBio(false); setBioContent(profileData?.bio || ""); }}>Cancel</Button>
+                            <Button onClick={handleSaveBio}>Save Changes</Button>
                           </div>
-                        )}
-                        {!contactInfo.bio && !loading && (
-                          <p className="text-xs text-gray-400">Tell others about yourself</p>
-                        )}
-                      </div>
+                        </div>
+                      ) : (
+                        <p className="text-sm text-gray-700 dark:text-gray-300 whitespace-pre-wrap min-h-[50px]">
+                          {profileData?.bio || <span className="text-gray-400">No bio added yet. Click the edit button to add one.</span>}
+                        </p>
+                      )}
                     </Card>
 
                     {/* Purchase History */}
                     <Card className="p-6">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold">Recent Purchases</h3>
-                        <Button variant="outline" size="sm">
-                          View All
-                        </Button>
+                        <Button variant="outline" size="sm">View All</Button>
                       </div>
-                      <div className="space-y-3">
-                        {[1, 2, 3].map((i) => (
-                          <div key={i} className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
-                            <div className="h-12 w-12 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                            <div className="flex-1 space-y-2">
-                              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                              <div className="h-3 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-2/3"></div>
+                      {loading.purchases ? (
+                        <div className="space-y-3">
+                          {[1, 2].map((i) => <Skeleton key={i} className="h-16 w-full" />)}
+                        </div>
+                      ) : purchases.length > 0 ? (
+                        <div className="space-y-3">
+                          {purchases.map((purchase) => (
+                            <div key={purchase.id} className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                              <div className="h-12 w-12 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <ShoppingBag className="h-6 w-6 text-gray-400"/>
+                              </div>
+                              <div className="flex-1">
+                                <p className="font-semibold">{purchase.services?.title || "Service not available"}</p>
+                                <p className="text-sm text-gray-500">
+                                  {new Date(purchase.purchase_datetime).toLocaleDateString()} - ${purchase.amount}
+                                </p>
+                              </div>
                             </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="text-center py-8">
-                        <ShoppingBag className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-                        <p className="text-sm text-gray-500">No purchases yet</p>
-                      </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-8">
+                          <ShoppingBag className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+                          <p className="text-sm text-gray-500">No purchases yet</p>
+                        </div>
+                      )}
                     </Card>
 
                     {/* Wishlist */}
                     <Card className="p-6">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold">Wishlist</h3>
-                        <Badge variant="secondary">0 items</Badge>
+                        <Badge variant="secondary">{wishlist.length} item{wishlist.length !== 1 && 's'}</Badge>
                       </div>
-                      <div className="text-center py-8">
-                        <Heart className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-                        <p className="text-sm text-gray-500">No items in wishlist</p>
-                      </div>
+                       {loading.wishlist ? (
+                        <Skeleton className="h-24 w-full" />
+                      ) : wishlist.length > 0 ? (
+                         <div className="space-y-3">
+                          {wishlist.map((item, index) => (
+                            <div key={index} className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                               <div className="h-12 w-12 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <Heart className="h-6 w-6 text-gray-400"/>
+                              </div>
+                              <p className="font-semibold">{item.services?.title || "Service not available"}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-8">
+                          <Heart className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+                          <p className="text-sm text-gray-500">No items in wishlist</p>
+                        </div>
+                      )}
                     </Card>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-3">
-                      <Button disabled className="flex-1">Save Changes</Button>
-                      <Button variant="outline" disabled>Cancel</Button>
-                    </div>
                   </div>
                 )}
 
                 {/* 2. SESSIONS TAB */}
                 {activeTab === "sessions" && (
-                  <div className="space-y-6">
+                   <div className="space-y-6">
                     <div>
                       <h3 className="text-lg font-semibold mb-2">My Sessions</h3>
                       <p className="text-sm text-gray-500">View and manage your booked sessions</p>
                     </div>
-
-                    {/* Session Cards */}
-                    <div className="space-y-3">
-                      {[1, 2].map((i) => (
-                        <Card key={i} className="p-4">
-                          <div className="flex items-center justify-between">
-                            <div className="space-y-2 flex-1">
-                              <div className="h-4 w-48 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
-                              <div className="h-3 w-32 bg-gray-200 dark:bg-gray-700 rounded animate-pulse"></div>
+                    {loading.sessions ? (
+                      <div className="space-y-3">
+                        {[1, 2].map((i) => <Skeleton key={i} className="h-20 w-full" />)}
+                      </div>
+                    ) : sessions.length > 0 ? (
+                      <div className="space-y-3">
+                        {sessions.map((session) => (
+                          <Card key={session.id} className="p-4">
+                            <div className="flex items-center justify-between">
+                              <div className="space-y-1 flex-1">
+                                <p className="font-semibold">{session.services?.title || "Service"}</p>
+                                <p className="text-sm text-gray-500">
+                                   <Calendar className="h-3.5 w-3.5 inline-block mr-1.5 -mt-1"/>
+                                   {new Date(session.session_datetime).toLocaleString()}
+                                </p>
+                              </div>
+                              <Button size="sm" asChild disabled={!session.meeting_link}>
+                                <a href={session.meeting_link || ""} target="_blank" rel="noopener noreferrer">
+                                  <Video className="h-4 w-4 mr-2" />
+                                  Join Meeting
+                                </a>
+                              </Button>
                             </div>
-                            <Button disabled size="sm">
-                              <Video className="h-4 w-4 mr-2" />
-                              Join Meeting
-                            </Button>
-                          </div>
-                        </Card>
-                      ))}
-                    </div>
-
-                    <div className="text-center py-12">
-                      <CalendarDays className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
-                      <p className="text-sm text-gray-500">No scheduled sessions</p>
-                      <Button variant="outline" className="mt-4" disabled>
-                        Browse Services
-                      </Button>
-                    </div>
+                          </Card>
+                        ))}
+                      </div>
+                    ) : (
+                      <div className="text-center py-12">
+                        <CalendarDays className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+                        <p className="text-sm text-gray-500">No scheduled sessions</p>
+                        <Button variant="outline" className="mt-4" onClick={() => navigate('/services')}>
+                          Browse Services
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 )}
 
                 {/* 3. SETTINGS TAB */}
                 {activeTab === "settings" && (
                   <div className="space-y-6">
-                    <div>
-                      <h3 className="text-lg font-semibold mb-2">Account Settings</h3>
-                      <p className="text-sm text-gray-500">Manage your account preferences</p>
-                    </div>
-
-                    {/* Notification Preferences */}
-                    <Card className="p-6">
-                      <h4 className="font-semibold mb-4">Notification Preferences</h4>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">Email Notifications</p>
-                            <p className="text-sm text-gray-500">Receive updates via email</p>
-                          </div>
-                          <label className="relative inline-flex items-center cursor-not-allowed">
-                            <input type="checkbox" disabled className="sr-only peer" />
-                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                          </label>
-                        </div>
-
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">Session Reminders</p>
-                            <p className="text-sm text-gray-500">Get reminded before sessions</p>
-                          </div>
-                          <label className="relative inline-flex items-center cursor-not-allowed">
-                            <input type="checkbox" disabled className="sr-only peer" />
-                            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                          </label>
-                        </div>
+                    {loading.settings ? <Skeleton className="h-64 w-full" /> : settings ? (
+                    <>
+                      <div>
+                        <h3 className="text-lg font-semibold mb-2">Account Settings</h3>
+                        <p className="text-sm text-gray-500">Manage your account preferences</p>
                       </div>
-                    </Card>
-
-                    {/* Privacy Settings */}
-                    <Card className="p-6">
-                      <h4 className="font-semibold mb-4">Privacy</h4>
-                      <div className="space-y-4">
-                        <div className="flex items-center justify-between">
-                          <div>
-                            <p className="font-medium">Profile Visibility</p>
-                            <p className="text-sm text-gray-500">Who can see your profile</p>
+                      <Card className="p-6">
+                        <h4 className="font-semibold mb-4">Notification Preferences</h4>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium">Email Notifications</p>
+                              <p className="text-sm text-gray-500">Receive updates via email</p>
+                            </div>
+                            <Switch
+                              checked={settings.email_notifications_enabled}
+                              onCheckedChange={(val) => handleSettingsChange('email_notifications_enabled', val)}
+                            />
                           </div>
-                          <Badge variant="outline">Public</Badge>
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium">Session Reminders</p>
+                              <p className="text-sm text-gray-500">Get reminded before sessions</p>
+                            </div>
+                            <Switch
+                               checked={settings.session_reminders_enabled}
+                               onCheckedChange={(val) => handleSettingsChange('session_reminders_enabled', val)}
+                             />
+                          </div>
                         </div>
+                      </Card>
+                      <Card className="p-6">
+                        <h4 className="font-semibold mb-4">Privacy</h4>
+                        <div className="space-y-4">
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium">Profile Visibility</p>
+                              <p className="text-sm text-gray-500">Who can see your profile</p>
+                            </div>
+                            {/* This would be a select/dropdown in a real scenario */}
+                            <Badge variant="outline">{settings.profile_visibility}</Badge>
+                          </div>
+                        </div>
+                      </Card>
+                    </>
+                    ) : (
+                      <div className="text-center py-12">
+                        <Settings className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+                        <p className="text-sm text-gray-500">Could not load settings.</p>
                       </div>
-                    </Card>
-
-                    {/* Action Buttons */}
-                    <div className="flex gap-3">
-                      <Button disabled className="flex-1">Save Settings</Button>
-                      <Button variant="outline" disabled>Cancel</Button>
-                    </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -429,19 +604,5 @@ const BuyerProfile = () => {
     </div>
   );
 };
-
-interface ProfileData {
-  name: string;
-  student_id: string;
-  email: string;
-  secondary_email: string | null;
-  phone: string;
-  major: string;
-  semester: string;
-  campus: string;
-  location: string;
-  languages: string[];
-  bio: string | null;
-}
 
 export default BuyerProfile;
