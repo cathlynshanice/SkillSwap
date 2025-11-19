@@ -49,6 +49,8 @@ import AuthGate from "./components/AuthGate";
 import BrowseContributors from "./pages/seeker/BrowseContributors";
 import ViewContributor from "./pages/seeker/ViewContributor";
 import BrowseJobs from "./pages/contributor/BrowseJobs";
+import CreateJobs from "./pages/seeker/CreateJobs";
+import SeeRequester from "./pages/seeker/SeeRequester";
 
 const queryClient = new QueryClient();
 
@@ -58,33 +60,32 @@ const App = () => (
       <Toaster />
       <BrowserRouter>
         {/* 👇 Wrap protected pages inside AuthGate */}
-        <AuthGate>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/landing" element={<Landing />} />
-            <Route path="/onboarding" element={<OnboardingPage />} />
-            <Route path="/buyer-profile" element={<BuyerProfile />} />
-            <Route path="/seller-profile" element={<SellerProfile />} />
-            <Route path="/projects" element={<ProjectsShowcase />} />
-            <Route path="/notifications" element={<Notifications />} />
-            <Route path="/reviews" element={<ReviewRatings />} />
-            <Route path="/messages" element={<Messages />} />
-            <Route path="/seller-insights" element={<SellerInsights />} />
-            <Route
-              path="/browse-contributors"
-              element={<BrowseContributors />}
-            />
-            <Route
-              path="/view-contributor/:username"
-              element={<ViewContributor />}
-            />
-            <Route path="/login" element={<LoginPage />} />
-            <Route path="/browse-jobs" element={<BrowseJobs />} />
-            {/* <Route path="/signup" element={<SignupPage />} /> */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthGate>
+        {/* <AuthGate> */}
+        <Routes>
+          <Route path="/" element={<Index />} />
+          <Route path="/home" element={<Home />} />
+          <Route path="/landing" element={<Landing />} />
+          <Route path="/onboarding" element={<OnboardingPage />} />
+          <Route path="/buyer-profile" element={<BuyerProfile />} />
+          <Route path="/seller-profile" element={<SellerProfile />} />
+          <Route path="/projects" element={<ProjectsShowcase />} />
+          <Route path="/notifications" element={<Notifications />} />
+          <Route path="/reviews" element={<ReviewRatings />} />
+          <Route path="/messages" element={<Messages />} />
+          <Route path="/seller-insights" element={<SellerInsights />} />
+          <Route path="/browse-contributors" element={<BrowseContributors />} />
+          <Route
+            path="/view-contributor/:username"
+            element={<ViewContributor />}
+          />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/browse-jobs" element={<BrowseJobs />} />
+          <Route path="/create-jobs" element={<CreateJobs />} />
+          <Route path="/see-requester" element={<SeeRequester />} />
+          {/* <Route path="/signup" element={<SignupPage />} /> */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+        {/* </AuthGate> */}
       </BrowserRouter>
     </TooltipProvider>
   </QueryClientProvider>
