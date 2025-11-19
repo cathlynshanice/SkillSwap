@@ -25,6 +25,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { setUserRole } from "@/lib/userContext";
 
+
 const HomeNavbar = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
@@ -94,7 +95,7 @@ const HomeNavbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  <DropdownMenuItem>Browse Jobs</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/browse-jobs")}>Browse Jobs</DropdownMenuItem>
                   <DropdownMenuItem>Saved Jobs</DropdownMenuItem>
                   <DropdownMenuItem>Proposals</DropdownMenuItem>
                 </DropdownMenuContent>

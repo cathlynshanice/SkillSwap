@@ -48,6 +48,7 @@ import SellerInsights from "@/pages/contributor/SellerInsights";
 import AuthGate from "./components/AuthGate";
 import BrowseContributors from "./pages/seeker/BrowseContributors";
 import ViewContributor from "./pages/seeker/ViewContributor";
+import BrowseJobs from "./pages/contributor/BrowseJobs";
 
 const queryClient = new QueryClient();
 
@@ -70,9 +71,16 @@ const App = () => (
             <Route path="/reviews" element={<ReviewRatings />} />
             <Route path="/messages" element={<Messages />} />
             <Route path="/seller-insights" element={<SellerInsights />} />
-            <Route path="/browse-contributors" element={<BrowseContributors />} />
-            <Route path="/view-contributor/:username" element={<ViewContributor />} />
+            <Route
+              path="/browse-contributors"
+              element={<BrowseContributors />}
+            />
+            <Route
+              path="/view-contributor/:username"
+              element={<ViewContributor />}
+            />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/browse-jobs" element={<BrowseJobs />} />
             {/* <Route path="/signup" element={<SignupPage />} /> */}
             <Route path="*" element={<NotFound />} />
           </Routes>
