@@ -9,14 +9,10 @@ import {
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileSidebar from "@/components/ProfileSidebar";
-import { setUserRole } from "@/lib/userContext";
 import { supabase } from "@/lib/SupabaseClient";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-
-// Set role IMMEDIATELY before component renders
-setUserRole("seller");
 
 // --- Data Type Interfaces ---
 interface ProfileData {
@@ -82,11 +78,8 @@ const SellerProfile = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // setUserRole is now handled by the parent ProfilePage
     window.scrollTo(0, 0);
-    // Optional: dev-only quick override via URL param ?as=seller
-    if (import.meta.env.DEV && new URLSearchParams(window.location.search).get("as") === "seller") {
-      import("@/lib/userContext").then((mod) => mod.setUserRole("seller"));
-    }
 
     const fetchAllData = async () => {
       const { data: { user } } = await supabase.auth.getUser();

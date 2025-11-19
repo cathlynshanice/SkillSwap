@@ -37,7 +37,6 @@ const HomeNavbar = () => {
     const controlNavbar = () => {
       const currentScrollY = window.scrollY;
 
-      // Clear any existing timeout
       if (scrollTimeout) {
         clearTimeout(scrollTimeout);
       }
@@ -45,14 +44,11 @@ const HomeNavbar = () => {
       if (currentScrollY < 10) {
         setIsVisible(true);
       } else if (currentScrollY > lastScrollY) {
-        // Scrolling down
         setIsVisible(false);
       } else {
-        // Scrolling up
         setIsVisible(true);
       }
 
-      // Set a new timeout to show navbar after 0.3 second of no scrolling
       const timeout = setTimeout(() => {
         setIsVisible(true);
       }, 300);
@@ -79,9 +75,7 @@ const HomeNavbar = () => {
     >
       <div className="container mx-auto px-4 lg:px-6 xl:px-8 py-2.5">
         <div className="flex items-center justify-between gap-8">
-          {/* Left Section - Logo and Main Navigation */}
           <div className="flex items-center gap-4">
-            {/* Logo */}
             <a
               href="/landing"
               className="flex items-center gap-2 flex-shrink-0"
@@ -96,7 +90,6 @@ const HomeNavbar = () => {
               </span>
             </a>
 
-            {/* Main Navigation Links */}
             <div className="hidden md:flex items-center gap-6">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -148,9 +141,7 @@ const HomeNavbar = () => {
             </div>
           </div>
 
-          {/* Right Section - Actions */}
           <div className="flex items-center gap-2">
-            {/* Help Button */}
             <Button
               variant="ghost"
               size="icon"
@@ -160,7 +151,6 @@ const HomeNavbar = () => {
               <HelpCircle className="h-5 w-5" />
             </Button>
 
-            {/* Notifications */}
             <Button
               variant="ghost"
               size="icon"
@@ -170,7 +160,6 @@ const HomeNavbar = () => {
               <Bell className="h-5 w-5" />
             </Button>
 
-            {/* Profile Sidebar */}
             <Sheet>
               <SheetTrigger asChild>
                 <Button
@@ -189,7 +178,6 @@ const HomeNavbar = () => {
                   </SheetDescription>
                 </SheetHeader>
 
-                {/* Profile Info - Empty State */}
                 <div className="mt-6 flex items-center gap-4 pb-6 border-b">
                   <div className="h-16 w-16 rounded-full bg-gray-300 dark:bg-gray-600"></div>
                   <div>
@@ -202,15 +190,11 @@ const HomeNavbar = () => {
                   </div>
                 </div>
 
-                {/* Menu Items */}
                 <div className="mt-6 space-y-1">
                   <Button
                     variant="ghost"
                     className="w-full justify-start text-left hover:bg-accent"
-                    onClick={() => {
-                      setUserRole("buyer");
-                      navigate("/profile");
-                    }}
+                    onClick={() => navigate("/buyer-profile")}
                   >
                     <User className="mr-2 h-4 w-4" />
                     Buyer Profile
@@ -248,14 +232,13 @@ const HomeNavbar = () => {
                   </Button>
                 </div>
 
-                {/* Logout Button */}
                 <div className="absolute bottom-6 left-6 right-6">
                   <Button
                     variant="destructive"
                     className="w-full"
-                    onClick={() => navigate("/login")}
+                    onClick={() => navigate("/logout")}
                   >
-                    <a>Logout</a>
+                    Logout
                   </Button>
                 </div>
               </SheetContent>
