@@ -46,6 +46,8 @@ import ReviewRatings from "@/pages/ReviewRatings";
 import Messages from "@/pages/Messages";
 import SellerInsights from "@/pages/SellerInsights";
 import AuthGate from "./components/AuthGate"; // ✅ import here
+import MyJobs from "./pages/MyJobs";
+import JobDetail from "./pages/JobDetail";
 
 const queryClient = new QueryClient();
 
@@ -69,6 +71,8 @@ const App = () => (
             <Route path="/messages" element={<Messages />} />
             <Route path="/seller-insights" element={<SellerInsights />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/myjobs" element={<MyJobs />} />
+            <Route path="/job/:id" element={<JobDetail />} />
             {/* <Route path="/signup" element={<SignupPage />} /> */}
             <Route path="*" element={<NotFound />} />
           </Routes>

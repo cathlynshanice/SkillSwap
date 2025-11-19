@@ -107,9 +107,15 @@ const HomeNavbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  <DropdownMenuItem>My Jobs</DropdownMenuItem>
-                  <DropdownMenuItem>All Contracts</DropdownMenuItem>
-                  <DropdownMenuItem>Work Diary</DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <a href="/myjobs">My Jobs</a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <a href="/myjobs?status=ALL">All Contracts</a>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem>
+                    <a href="/myjobs?status=COMPLETED">Work Diary</a>
+                  </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 

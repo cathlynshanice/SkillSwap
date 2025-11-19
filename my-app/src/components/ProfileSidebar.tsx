@@ -1,5 +1,5 @@
   import { Badge } from "@/components/ui/badge";
-import { User, Briefcase, MessageSquare, Bell, Handshake, Star, Video, CalendarDays, Search, TrendingUp } from "lucide-react";
+import { User, Briefcase, MessageSquare, Bell, Handshake, Star, Video, CalendarDays, Search, TrendingUp, BriefcaseBusiness } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import SkillSwapLogo from "@/assets/SkillSwapLogo.svg";
 import { isSeller } from "@/lib/userContext";
@@ -63,6 +63,18 @@ const ProfileSidebar = () => {
             }`}
           >
             <Briefcase className="h-4 w-4" /> Projects Showcase
+          </button>
+        )}
+        {userIsSeller && (
+          <button 
+            onClick={() => navigate('/myjobs')}
+            className={`w-full flex items-center gap-3 px-3 py-2 text-sm rounded-md ${
+              isActive('/projects') 
+                ? 'bg-gray-100 dark:bg-gray-700' 
+                : 'hover:bg-gray-100 dark:hover:bg-gray-700'
+            }`}
+          >
+            <BriefcaseBusiness className="h-4 w-4" /> Manage Jobs
           </button>
         )}
         {userIsSeller && (
