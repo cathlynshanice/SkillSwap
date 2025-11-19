@@ -1,67 +1,46 @@
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { 
-  User, Calendar, MapPin, Phone, Mail, Globe, Clock, GraduationCap, 
+import {
+  User, Calendar, MapPin, Phone, Mail, Globe, Clock, GraduationCap,
   Pencil, MoreVertical, CheckCircle2, CalendarDays, Video, Settings,
   ShoppingBag, Heart, Star
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileSidebar from "@/components/ProfileSidebar";
-import { setUserRole } from "@/lib/userContext";
 import { supabase } from "@/lib/SupabaseClient";
-
-// Set role IMMEDIATELY before component renders
-setUserRole("buyer");
-
-interface ProfileData {
-  name: string;
-  student_id: string;
-  email: string;
-  secondary_email: string | null;
-  phone: string;
-  major: string;
-  semester: string;
-  campus: string;
-  location: string;
-  languages: string[];
-  bio: string | null;
-}
 
 const BuyerProfile = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "sessions" | "settings">("profile");
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
     fetchProfileData();
+    // Optional: dev-only quick override via URL param ?as=buyer
+    if (import.meta.env.DEV && new URLSearchParams(window.location.search).get("as") === "buyer") {
+      import("@/lib/userContext").then((mod) => mod.setUserRole("buyer"));
+    }
   }, []);
 
   const fetchProfileData = async () => {
     try {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
-        console.error("No authenticated user");
         setLoading(false);
         return;
       }
-
       const { data, error } = await supabase
         .from("profiles")
         .select("*")
         .eq("id", user.id)
         .single();
-
-      if (error) {
-        console.error("Error fetching profile:", error);
-      } else {
-        setProfileData(data);
-      }
+      if (!error) setProfileData(data);
     } catch (error) {
-      console.error("Error:", error);
+      // handle error
     } finally {
       setLoading(false);
     }
@@ -91,7 +70,7 @@ const BuyerProfile = () => {
         {/* Top Header */}
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-3 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2 text-sm">
-            <button 
+            <button
               onClick={() => navigate('/home')}
               className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
             >
@@ -238,33 +217,33 @@ const BuyerProfile = () => {
             <div className="p-6">
               {/* Header Tabs */}
               <div className="flex items-center gap-1 border-b border-gray-200 dark:border-gray-700 mb-6 overflow-x-auto">
-                <button 
+                <button
                   onClick={() => setActiveTab("profile")}
                   className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all whitespace-nowrap ${
-                    activeTab === "profile" 
-                      ? "border-primary bg-gray-50 dark:bg-gray-700/50 text-primary" 
+                    activeTab === "profile"
+                      ? "border-primary bg-gray-50 dark:bg-gray-700/50 text-primary"
                       : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/30"
                   }`}
                 >
                   <User className="h-4 w-4" />
                   My Profile
                 </button>
-                <button 
+                <button
                   onClick={() => setActiveTab("sessions")}
                   className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all whitespace-nowrap ${
-                    activeTab === "sessions" 
-                      ? "border-primary bg-gray-50 dark:bg-gray-700/50 text-primary" 
+                    activeTab === "sessions"
+                      ? "border-primary bg-gray-50 dark:bg-gray-700/50 text-primary"
                       : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/30"
                   }`}
                 >
                   <CalendarDays className="h-4 w-4" />
                   Sessions <Badge variant="secondary" className="ml-1">0</Badge>
                 </button>
-                <button 
+                <button
                   onClick={() => setActiveTab("settings")}
                   className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-t-lg border-b-2 transition-all whitespace-nowrap ${
-                    activeTab === "settings" 
-                      ? "border-primary bg-gray-50 dark:bg-gray-700/50 text-primary" 
+                    activeTab === "settings"
+                      ? "border-primary bg-gray-50 dark:bg-gray-700/50 text-primary"
                       : "border-transparent text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-gray-100 hover:bg-gray-50 dark:hover:bg-gray-700/30"
                   }`}
                 >
@@ -450,5 +429,19 @@ const BuyerProfile = () => {
     </div>
   );
 };
+
+interface ProfileData {
+  name: string;
+  student_id: string;
+  email: string;
+  secondary_email: string | null;
+  phone: string;
+  major: string;
+  semester: string;
+  campus: string;
+  location: string;
+  languages: string[];
+  bio: string | null;
+}
 
 export default BuyerProfile;

@@ -5,18 +5,18 @@ import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { useNavigate } from "react-router-dom";
 import ProfileSidebar from "@/components/ProfileSidebar";
-import { setUserRole } from "@/lib/userContext";
-
-// Set role IMMEDIATELY before component renders
-setUserRole("seller");
 
 const SellerProfile = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [activeTab, setActiveTab] = useState<"profile" | "sessions" | "settings">("profile");
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     window.scrollTo(0, 0);
+    // Optional: dev-only quick override via URL param ?as=seller
+    if (import.meta.env.DEV && new URLSearchParams(window.location.search).get("as") === "seller") {
+      import("@/lib/userContext").then((mod) => mod.setUserRole("seller"));
+    }
   }, []);
 
   const activities = [
