@@ -1,7 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
-import { Star, Handshake, CreditCard, User, ArrowLeft, MessageCircle } from "lucide-react";
+import { Star, Handshake, CreditCard, User, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import ProfileSidebar from "@/components/ProfileSidebar";
 import { Button } from "@/components/ui/button";
 
@@ -27,10 +27,16 @@ type Contributor = {
   userReviews: UserReview[];
 };
 
+const IMAGE_WIDTH = 260;
+const IMAGE_HEIGHT = 160;
+const MAX_IMAGES = 5;
+const MAX_LINKS = 5;
+
 const ViewContributor = () => {
   const { username } = useParams();
   const navigate = useNavigate();
   const [contributor, setContributor] = useState<Contributor | null>(null);
+  const [carouselIndex, setCarouselIndex] = useState(0);
 
   useEffect(() => {
     fetch("/src/assets/mockContributors.json")
@@ -49,23 +55,37 @@ const ViewContributor = () => {
     );
   }
 
+  // Portfolio images for carousel (max 5)
+  const portfolioImages = contributor.portfolio
+    .filter(item => item.type === "image")
+    .slice(0, MAX_IMAGES);
+
+  // Carousel navigation
+  const handlePrev = () => setCarouselIndex(i => (i === 0 ? portfolioImages.length - 1 : i - 1));
+  const handleNext = () => setCarouselIndex(i => (i === portfolioImages.length - 1 ? 0 : i + 1));
+
   return (
     <div className="h-screen bg-gray-50 dark:bg-gray-900 flex overflow-hidden">
       <ProfileSidebar />
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
-        {/* Breadcrumb & Back Button */}
-        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-4">
-          <div className="flex items-center gap-2">
-            <Button variant="ghost" size="icon" onClick={() => navigate(-1)}>
-              <ArrowLeft className="h-5 w-5" />
-            </Button>
-            <nav className="flex items-center gap-2 text-sm">
-              <span className="text-gray-600">Home</span>
-              <span className="text-gray-400">/</span>
-              <span className="text-gray-600">Browse Contributors</span>
-              <span className="text-gray-400">/</span>
-              <span className="text-gray-900 dark:text-gray-100 font-semibold">Contributor Profile</span>
-            </nav>
+        {/* Breadcrumb (sync with BrowseContributors) */}
+        <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-3 flex items-center justify-between flex-shrink-0">
+          <div className="flex items-center gap-2 text-sm">
+            <button
+              className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
+              onClick={() => navigate("/")}
+            >
+              Home
+            </button>
+            <span className="text-gray-400">/</span>
+            <button
+              className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
+              onClick={() => navigate("/browse-contributors")}
+            >
+              Browse Contributors
+            </button>
+            <span className="text-gray-400">/</span>
+            <span className="text-gray-900 dark:text-gray-100 font-semibold">Contributor Profile</span>
           </div>
         </header>
         <div className="flex-1 bg-white dark:bg-gray-800 overflow-y-auto px-4 py-8 md:px-8">
@@ -126,25 +146,86 @@ const ViewContributor = () => {
           <div className="mb-4">
             <div className="font-semibold mb-2">Portfolio</div>
             {/* Links on top */}
-            <div className="flex gap-4 flex-wrap mb-2">
-              {contributor.portfolio?.filter(item => item.type === "link").map((item, idx) => (
-                <div key={idx} className="flex items-center gap-2 text-base font-medium">
-                  <span role="img" aria-label="link">🔗</span>
-                  <span>{item.url?.replace(/^https?:\/\//, "")}</span>
+            <div className="flex gap-4 flex-wrap mb-4">
+              {contributor.portfolio
+                ?.filter(item => item.type === "link")
+                .slice(0, MAX_LINKS)
+                .map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-2 text-base font-medium">
+                    <span role="img" aria-label="link">🔗</span>
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 underline"
+                    >
+                      {item.url?.replace(/^https?:\/\//, "")}
+                    </a>
+                  </div>
+                ))}
+            </div>
+            {/* Carousel for images */}
+            {portfolioImages.length > 0 && (
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handlePrev}
+                  disabled={portfolioImages.length <= 1}
+                  aria-label="Previous"
+                >
+                  <ChevronLeft className="h-6 w-6" />
+                </Button>
+                <div className="flex flex-wrap gap-4 justify-start items-center">
+                  {portfolioImages.map((img, idx) => (
+                    <div
+                      key={idx}
+                      style={{
+                        width: IMAGE_WIDTH,
+                        height: IMAGE_HEIGHT,
+                        borderRadius: "0.5rem",
+                        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+                        background: "#fff",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        position: "relative",
+                        cursor: "pointer",
+                        transition: "transform 0.3s cubic-bezier(.4,0,.2,1)",
+                        transform: carouselIndex === idx ? "scale(1.08)" : "scale(1)",
+                        zIndex: carouselIndex === idx ? 2 : 1,
+                      }}
+                      onClick={() => setCarouselIndex(idx)}
+                    >
+                      <img
+                        src={img.src}
+                        alt={img.alt}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          borderRadius: "0.5rem",
+                          transition: "box-shadow 0.3s cubic-bezier(.4,0,.2,1)",
+                          boxShadow: carouselIndex === idx ? "0 4px 16px rgba(0,0,0,0.18)" : undefined,
+                        }}
+                      />
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-            {/* Images below links */}
-            <div className="flex gap-4 flex-wrap">
-              {contributor.portfolio?.filter(item => item.type === "image").map((item, idx) => (
-                <img
-                  key={idx}
-                  src={item.src}
-                  alt={item.alt}
-                  className="h-24 w-36 object-cover rounded shadow bg-white"
-                />
-              ))}
-            </div>
+                <Button
+                  variant="ghost"
+                  size="icon"
+                  onClick={handleNext}
+                  disabled={portfolioImages.length <= 1}
+                  aria-label="Next"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </Button>
+                <span className="text-xs text-gray-500 ml-2">
+                  {carouselIndex + 1} / {portfolioImages.length}
+                </span>
+              </div>
+            )}
           </div>
 
           {/* Deal Section */}
