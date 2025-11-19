@@ -14,6 +14,7 @@ import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
+import { RealtimeChannel } from "@supabase/supabase-js";
 
 type VerificationStatus = 'unverified' | 'pending' | 'verified' | 'rejected';
 
@@ -160,8 +161,9 @@ const BuyerProfile = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    let channel: RealtimeChannel;
 
-    const fetchAllData = async () => {
+    const fetchAndSubscribe = async () => {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) {
         Object.keys(loading).forEach(key => setLoading(prev => ({...prev, [key]: false})));
@@ -178,9 +180,34 @@ const BuyerProfile = () => {
         fetchWishlist(user.id),
         fetchSettings(user.id)
       ]);
+
+      // Set up real-time subscription for profile changes
+      channel = supabase
+        .channel(`public:profiles:id=eq.${user.id}`)
+        .on(
+          'postgres_changes',
+          {
+            event: 'UPDATE',
+            schema: 'public',
+            table: 'profiles',
+            filter: `id=eq.${user.id}`,
+          },
+          (payload) => {
+            console.log('Profile updated in real-time!', payload.new);
+            setProfileData(payload.new as ProfileData);
+          }
+        )
+        .subscribe();
     };
 
-    fetchAllData();
+    fetchAndSubscribe();
+
+    // Cleanup function to unsubscribe
+    return () => {
+      if (channel) {
+        supabase.removeChannel(channel);
+      }
+    };
   }, []);
 
   const fetchProfileData = async (userId: string) => {
