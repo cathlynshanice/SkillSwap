@@ -1,19 +1,21 @@
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
 import {
   User, Calendar, MapPin, Phone, Mail, Globe, GraduationCap,
   Pencil, MoreVertical, CalendarDays, Video, Settings,
-  ShoppingBag, Heart, Edit
+  ShoppingBag, Heart, Edit, Rocket, Clock, XCircle
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileSidebar from "@/components/ProfileSidebar";
 import { supabase } from "@/lib/SupabaseClient";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
-import { setUserRole } from "@/lib/userContext";
+
+type VerificationStatus = 'unverified' | 'pending' | 'verified' | 'rejected';
 
 // --- Data Type Interfaces ---
 interface ProfileData {
@@ -28,8 +30,10 @@ interface ProfileData {
   location: string | null;
   languages: string[];
   bio: string | null;
+  verification_status: VerificationStatus;
 }
 
+// ... (rest of the interfaces remain the same)
 interface Service {
   id: number;
   title: string;
@@ -60,6 +64,78 @@ interface UserSettings {
   profile_visibility: string;
 }
 
+/**
+ * A dedicated card component to show seller verification status and CTA.
+ */
+const SellerStatusCard = ({ status, loading }: { status: VerificationStatus, loading: boolean }) => {
+  const navigate = useNavigate();
+
+  if (loading) {
+    return <Skeleton className="h-36 w-full" />;
+  }
+
+  // If status is pending, show an informational alert.
+  if (status === 'pending') {
+    return (
+      <Alert>
+        <Clock className="h-4 w-4" />
+        <AlertTitle>Pengajuan Anda Sedang Ditinjau</AlertTitle>
+        <AlertDescription>
+          Tim kami sedang mereview aplikasi Anda untuk menjadi kontributor. Anda akan menerima notifikasi setelah proses selesai (biasanya 1-3 hari kerja).
+        </AlertDescription>
+      </Alert>
+    );
+  }
+  
+  // If status is rejected, show an alert with a CTA to re-apply.
+  if (status === 'rejected') {
+    return (
+       <Alert variant="destructive">
+        <XCircle className="h-4 w-4" />
+        <AlertTitle>Pengajuan Ditolak</AlertTitle>
+        <AlertDescription>
+          Sayangnya, pengajuan Anda sebelumnya belum dapat kami setujui. Silakan periksa kembali data Anda dan coba lagi.
+          <Button variant="link" className="p-0 h-auto ml-1" onClick={() => navigate('/seller-verification')}>
+            Ajukan Ulang
+          </Button>
+        </AlertDescription>
+      </Alert>
+    );
+  }
+
+  // If status is unverified, show the main CTA card.
+  if (status === 'unverified') {
+    return (
+      <Card className="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground">
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2"><Rocket /> Jadilah Kontributor!</CardTitle>
+          <CardDescription className="text-primary-foreground/80">
+            Tawarkan keahlian Anda kepada mahasiswa lain dan mulailah mendapatkan penghasilan.
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm">
+            Dengan menjadi kontributor, Anda dapat memposting layanan, membangun portofolio, dan menjangkau ribuan calon klien di lingkungan BINUS University.
+          </p>
+        </CardContent>
+        <CardFooter>
+          <Button 
+            variant="secondary" 
+            className="w-full"
+            onClick={() => navigate('/seller-verification')}
+          >
+            Mulai Proses Verifikasi
+          </Button>
+        </CardFooter>
+      </Card>
+    );
+  }
+  
+  // Don't render anything if status is verified or other cases
+  return null;
+};
+
+
 const BuyerProfile = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "sessions" | "settings">("profile");
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
@@ -84,13 +160,6 @@ const BuyerProfile = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    // Set role IMMEDIATELY before component renders
-    setUserRole("buyer");
-    
-    // Optional: dev-only quick override via URL param ?as=buyer
-    if (import.meta.env.DEV && new URLSearchParams(window.location.search).get("as") === "buyer") {
-        import("@/lib/userContext").then((mod) => mod.setUserRole("buyer"));
-    }
 
     const fetchAllData = async () => {
       const { data: { user } } = await supabase.auth.getUser();
@@ -118,7 +187,7 @@ const BuyerProfile = () => {
     try {
       const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single();
       if (error) throw error;
-      setProfileData(data);
+      setProfileData(data as ProfileData);
       setBioContent(data.bio || "");
     } catch (error) {
       console.error("Error fetching profile:", error);
@@ -177,9 +246,18 @@ const BuyerProfile = () => {
   
   const fetchSettings = async (userId: string) => {
     try {
-      const { data, error } = await supabase.from("user_settings").select("*").eq("user_id", userId).single();
+      // Remove .single() to prevent error on zero rows.
+      const { data, error } = await supabase.from("user_settings").select("*").eq("user_id", userId);
       if (error) throw error;
-      setSettings(data);
+      
+      // If settings exist, use them. Otherwise, settings remain null.
+      if (data && data.length > 0) {
+        setSettings(data[0]);
+      } else {
+        // Handle case where no settings row exists for the user yet.
+        // For now, we'll leave settings as null and let the UI handle it.
+        setSettings(null);
+      }
     } catch (error) {
       console.error("Error fetching settings:", error);
     } finally {
@@ -199,7 +277,7 @@ const BuyerProfile = () => {
       
       if (error) throw error;
 
-      setProfileData(data);
+      setProfileData(data as ProfileData);
       setIsEditingBio(false);
     } catch (error) {
       console.error("Error updating bio:", error);
@@ -400,6 +478,12 @@ const BuyerProfile = () => {
                 {/* 1. MY PROFILE TAB */}
                 {activeTab === "profile" && (
                   <div className="space-y-6">
+                    {/* Seller Status CTA Card */}
+                    <SellerStatusCard 
+                      status={profileData?.verification_status || 'unverified'} 
+                      loading={loading.profile} 
+                    />
+
                     {/* About Me Section */}
                     <Card className="p-6">
                       <div className="flex items-center justify-between mb-4">

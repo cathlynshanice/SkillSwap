@@ -38,8 +38,7 @@ import LoginPage from "./pages/shared/Login";
 import Home from "./pages/shared/Home";
 import Landing from "./pages/shared/Landing";
 import OnboardingPage from "@/pages/shared/Onboarding";
-import BuyerProfile from "@/pages/seeker/BuyerProfile";
-import SellerProfile from "@/pages/contributor/SellerProfile";
+import ProfilePage from "@/pages/shared/ProfilePage";
 import ProjectsShowcase from "@/pages/contributor/ProjectsShowcase";
 import Notifications from "@/pages/shared/Notifications";
 import ReviewRatings from "@/pages/shared/ReviewRatings";
@@ -47,6 +46,7 @@ import Messages from "@/pages/shared/Messages";
 import SellerInsights from "@/pages/contributor/SellerInsights";
 import AuthGate from "./components/AuthGate";
 import BrowseContributors from "./pages/seeker/BrowseContributors";
+import SellerVerificationForm from "./pages/shared/SellerVerificationForm";
 import ViewContributor from "./pages/seeker/ViewContributor";
 
 const queryClient = new QueryClient();
@@ -63,8 +63,8 @@ const App = () => (
             <Route path="/home" element={<Home />} />
             <Route path="/landing" element={<Landing />} />
             <Route path="/onboarding" element={<OnboardingPage />} />
-            <Route path="/buyer-profile" element={<BuyerProfile />} />
-            <Route path="/seller-profile" element={<SellerProfile />} />
+            <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/seller-verification" element={<SellerVerificationForm />} />
             <Route path="/projects" element={<ProjectsShowcase />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/reviews" element={<ReviewRatings />} />

@@ -18,7 +18,7 @@ const commonItems = [
 
 /* Items intended for contributors (seller) */
 const contributorItems = [
-  { key: "profile", icon: <User className="h-4 w-4" />, label: "My Profile", path: "/seller-profile" },
+  { key: "profile", icon: <User className="h-4 w-4" />, label: "My Profile", path: "/profile" },
   { key: "projects", icon: <Briefcase className="h-4 w-4" />, label: "Projects Showcase", path: "/projects" },
   { key: "insights", icon: <TrendingUp className="h-4 w-4" />, label: "Seller Insights", path: "/seller-insights" },
 ];

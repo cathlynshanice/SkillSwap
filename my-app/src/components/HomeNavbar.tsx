@@ -160,24 +160,10 @@ const HomeNavbar = () => {
                   <Button 
                     variant="ghost" 
                     className="w-full justify-start text-left hover:bg-accent"
-                    onClick={() => {
-                      setUserRole("buyer");
-                      navigate("/profile");
-                    }}
+                    onClick={() => navigate("/profile")}
                   >
                     <User className="mr-2 h-4 w-4" />
-                    Buyer Profile
-                  </Button>
-                  <Button 
-                    variant="ghost" 
-                    className="w-full justify-start text-left hover:bg-accent"
-                    onClick={() => {
-                      setUserRole("seller");
-                      navigate("/seller-profile");
-                    }}
-                  >
-                    <User className="mr-2 h-4 w-4" />
-                    Seller Profile
+                    Profile
                   </Button>
                   <Button variant="ghost" className="w-full justify-start text-left hover:bg-accent" asChild>
                     <a href="/settings">
