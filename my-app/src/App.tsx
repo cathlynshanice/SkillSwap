@@ -7,7 +7,7 @@ import NotFound from "./pages/shared/NotFound";
 import LoginPage from "./pages/shared/Login";
 import Home from "./pages/shared/Home";
 import Landing from "./pages/shared/Landing";
-import OnboardingPage from "@/pages/shared/Onboarding";
+
 import ProfilePage from "@/pages/shared/ProfilePage";
 import ProjectsShowcase from "@/pages/contributor/ProjectsShowcase";
 import Notifications from "@/pages/shared/Notifications";
@@ -39,7 +39,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/home" element={<Home />} />
             <Route path="/landing" element={<Landing />} />
-            <Route path="/onboarding" element={<OnboardingPage />} />
+
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/buyer-profile" element={<BuyerProfile />} />
             <Route path="/seller-profile" element={<SellerProfile />} />

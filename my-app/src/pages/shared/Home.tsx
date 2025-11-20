@@ -3,11 +3,39 @@ import Footer from "@/components/Footer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { supabase } from "@/lib/SupabaseClient";
 
 const Home = () => {
   const [showReminder, setShowReminder] = useState(true);
-  const isProfileIncomplete = true; // Nanti bisa diganti dengan logic cek dari database
+  const [isProfileIncomplete, setIsProfileIncomplete] = useState(false);
+
+  useEffect(() => {
+    const checkProfileCompletion = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+
+      if (user) {
+        const { data: profile, error } = await supabase
+          .from('profiles')
+          .select('name, student_id, campus, major, phone')
+          .eq('id', user.id)
+          .single();
+
+        if (error) {
+          console.error("Error fetching profile for reminder:", error);
+          return;
+        }
+
+        if (profile) {
+          // Check if any of the required fields are null or empty strings
+          const incomplete = !profile.name || !profile.student_id || !profile.campus || !profile.major || !profile.phone;
+          setIsProfileIncomplete(incomplete);
+        }
+      }
+    };
+
+    checkProfileCompletion();
+  }, []); // Run this check once when the component mounts
 
   return (
     <div className="min-h-screen bg-background">
