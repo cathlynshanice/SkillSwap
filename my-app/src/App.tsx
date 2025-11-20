@@ -23,8 +23,8 @@ import CreateJobs from "./pages/seeker/CreateJobs";
 import SeeRequester from "./pages/seeker/SeeRequester";
 import BuyerProfile from "./pages/seeker/BuyerProfile";
 import SellerProfile from "./pages/contributor/SellerProfile";
-import MyJobs from "./pages/MyJobs";
-import JobDetail from "./pages/JobDetail";
+import MyJobs from "./pages/contributor/MyJobs";
+import JobDetail from "./pages/contributor/JobDetail";
 
 const queryClient = new QueryClient();
 
