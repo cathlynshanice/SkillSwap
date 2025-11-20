@@ -1,9 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-<<<<<<< Updated upstream
-import { User, Briefcase, MessageSquare, Bell, Handshake, Star, Video, CalendarDays, Search, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
-=======
-import { User, Briefcase, MessageSquare, Bell, Handshake, Star, Search, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
->>>>>>> Stashed changes
+import { User, BriefcaseBusiness, Briefcase, MessageSquare, Bell, Handshake, Star, Search, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import SkillSwapLogo from "@/assets/SkillSwapLogo.svg";
 import { isSeller } from "@/lib/userContext";
