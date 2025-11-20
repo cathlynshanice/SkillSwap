@@ -1,5 +1,5 @@
 import { Badge } from "@/components/ui/badge";
-import { User, Briefcase, MessageSquare, Bell, Handshake, Star, Video, CalendarDays, Search, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
+import { User, Briefcase, MessageSquare, Bell, Handshake, Star, Video, CalendarDays, Search, TrendingUp, ChevronLeft, ChevronRight, BriefcaseBusiness  } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import SkillSwapLogo from "@/assets/SkillSwapLogo.svg";
 import { isSeller } from "@/lib/userContext";
@@ -21,6 +21,7 @@ const contributorItems = [
   { key: "profile", icon: <User className="h-4 w-4" />, label: "My Profile", path: "/profile" },
   { key: "projects", icon: <Briefcase className="h-4 w-4" />, label: "Projects Showcase", path: "/projects" },
   { key: "insights", icon: <TrendingUp className="h-4 w-4" />, label: "Seller Insights", path: "/seller-insights" },
+  { key: "myjobs", icon: <BriefcaseBusiness className="h-4 w-4" />, label: "Manage Jobs", path: "/myjobs" },
 ];
 
 /* Items intended for seekers (buyer) */

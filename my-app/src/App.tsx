@@ -23,6 +23,8 @@ import CreateJobs from "./pages/seeker/CreateJobs";
 import SeeRequester from "./pages/seeker/SeeRequester";
 import BuyerProfile from "./pages/seeker/BuyerProfile";
 import SellerProfile from "./pages/contributor/SellerProfile";
+import MyJobs from "./pages/MyJobs";
+import JobDetail from "./pages/JobDetail";
 
 const queryClient = new QueryClient();
 
@@ -49,6 +51,8 @@ const App = () => (
             <Route path="/browse-contributors" element={<BrowseContributors />} />
             <Route path="/view-contributor/:username" element={<ViewContributor />} />
             <Route path="/login" element={<LoginPage />} />
+            <Route path="/myjobs" element={<MyJobs />} />
+            <Route path="/job/:id" element={<JobDetail />} />
             <Route path="/browse-jobs" element={<BrowseJobs />} />
             <Route path="/create-jobs" element={<CreateJobs />} />
             <Route path="/see-requester" element={<SeeRequester />} />
