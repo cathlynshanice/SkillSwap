@@ -1,5 +1,9 @@
 import { Badge } from "@/components/ui/badge";
+<<<<<<< Updated upstream
 import { User, Briefcase, MessageSquare, Bell, Handshake, Star, Video, CalendarDays, Search, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
+=======
+import { User, Briefcase, MessageSquare, Bell, Handshake, Star, Search, TrendingUp, ChevronLeft, ChevronRight } from "lucide-react";
+>>>>>>> Stashed changes
 import { useNavigate, useLocation } from "react-router-dom";
 import SkillSwapLogo from "@/assets/SkillSwapLogo.svg";
 import { isSeller } from "@/lib/userContext";
@@ -29,9 +33,9 @@ const seekerItems = [
   { key: "profile_buyer", icon: <User className="h-4 w-4" />, label: "My Profile", path: "/profile" },
 ];
 
-const activeSessionsItems = [
-  { key: "video", icon: <Video className="h-4 w-4" />, label: "Video Sessions", path: "#", badge: 0 },
-  { key: "scheduled", icon: <CalendarDays className="h-4 w-4" />, label: "Scheduled", path: "#", badge: 0 },
+// Active deals replaces video session and scheduled
+const activeDealsItems = [
+  { key: "active_deals", icon: <Handshake className="h-4 w-4" />, label: "Active Deals", path: "/active-deals", badge: 0 },
 ];
 
 const ProfileSidebar = () => {
@@ -149,24 +153,10 @@ const ProfileSidebar = () => {
           {commonItems.map(renderItem)}
         </div>
 
-        {/* Active sessions (visible to both) */}
+        {/* Active Deals (visible to both) */}
         <div className={showFull ? "pt-4" : "pt-2"}>
-          {showFull && <SectionTitle title="Active Sessions" />}
-          {activeSessionsItems.map(renderItem)}
-        </div>
-
-        {/* Saved Connections */}
-        <div className={showFull ? "pt-4" : "pt-2"}>
-          {showFull && <SectionTitle title="Saved Connections" />}
-          {showFull ? (
-            <div className="px-3 py-6 text-center">
-              <p className="text-xs text-gray-400">No connections yet</p>
-            </div>
-          ) : (
-            <div className="flex items-center justify-center w-10 h-10 mx-auto" title="Saved Connections">
-              <Handshake className="h-5 w-5 text-gray-400" />
-            </div>
-          )}
+          {showFull && <SectionTitle title="Active Deals" />}
+          {activeDealsItems.map(renderItem)}
         </div>
       </nav>
     </aside>
