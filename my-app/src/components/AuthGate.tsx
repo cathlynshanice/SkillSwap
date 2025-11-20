@@ -17,19 +17,21 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
 
       // If no session, redirect to login page (unless on a public page)
       if (!session) {
-        if (location.pathname !== "/login" && location.pathname !== "/signup" && location.pathname !== "/landing") {
+        if (
+          location.pathname !== "/login" &&
+          location.pathname !== "/signup" &&
+          location.pathname !== "/landing" &&
+          location.pathname !== "/"
+        ) {
           navigate("/login");
         }
         setIsLoading(false);
         return;
       }
-      
+
       // 2. If a session exists, user should be redirected from auth pages to home.
       // The Home page will handle the "complete profile" reminder.
-      if (
-        location.pathname === "/login" ||
-        location.pathname === "/signup"
-      ) {
+      if (location.pathname === "/login" || location.pathname === "/signup") {
         navigate("/home");
       }
 
