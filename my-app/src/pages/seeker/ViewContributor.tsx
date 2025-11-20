@@ -39,7 +39,7 @@ const ViewContributor = () => {
   const [carouselIndex, setCarouselIndex] = useState(0);
 
   useEffect(() => {
-    fetch("/src/assets/mockContributors.json")
+    fetch("/src/assets/mock-assets/mockContributors.json")
       .then((res) => res.json())
       .then((data: Contributor[]) => {
         const found = data.find((c) => c.username === username);

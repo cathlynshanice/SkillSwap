@@ -36,7 +36,7 @@ const BrowseContributors = () => {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    fetch("/src/assets/mockContributors.json")
+    fetch("/src/assets/mock-assets/mockContributors.json")
       .then((res) => res.json())
       .then((data) => setContributors(data));
   }, []);

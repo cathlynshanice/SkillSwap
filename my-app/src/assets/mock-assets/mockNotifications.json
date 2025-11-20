@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "type": "Transaction",
+    "typeColor": "bg-green-500",
+    "unread": true,
+    "title": "Work Approved! Funds Released.",
+    "description": "Project 'React Component Refactoring' has been approved by the Seeker. Funds are being transferred.",
+    "author": "System Notification",
+    "time": "5 minutes ago",
+    "link": "/transactions/101"
+  },
+  {
+    "id": 2,
+    "type": "Message",
+    "typeColor": "bg-blue-500",
+    "unread": true,
+    "title": "New Chat Message from Dylan Lorrenzo",
+    "description": "Dylan messaged you regarding the status of the 'Database Normalization' project.",
+    "author": "Dylan Lorrenzo (Seeker)",
+    "time": "15 minutes ago",
+    "link": "/messages/dylan-lorrenzo"
+  },
+  {
+    "id": 3,
+    "type": "Review",
+    "typeColor": "bg-yellow-500",
+    "unread": false,
+    "title": "New Rating Received",
+    "description": "You received a 5.0 rating from Cathlyn Shanice for the 'Math Tutoring' service.",
+    "author": "Cathlyn Shanice (Seeker)",
+    "time": "1 hour ago",
+    "link": "/reviews"
+  },
+  {
+    "id": 4,
+    "type": "System",
+    "typeColor": "bg-gray-500",
+    "unread": false,
+    "title": "Profile Update Required",
+    "description": "Your Contributor profile needs an update to meet the latest academic integrity guidelines.",
+    "author": "Skill Swap Admin",
+    "time": "3 hours ago",
+    "link": "/seller-profile"
+  },
+  {
+    "id": 5,
+    "type": "Transaction",
+    "typeColor": "bg-red-500",
+    "unread": false,
+    "title": "Dispute Raised on Barter Deal",
+    "description": "The Seeker has disputed the completion of the 'UX Research Barter' project.",
+    "author": "Ferdinand Ignatius (Seeker)",
+    "time": "Yesterday",
+    "link": "/disputes/205"
+  },
+  {
+    "id": 6,
+    "type": "Proposal",
+    "typeColor": "bg-purple-500",
+    "unread": false,
+    "title": "New Proposal for Your Open Project",
+    "description": "A contributor submitted a proposal for your open project: 'Final Year Thesis Formatting'.",
+    "author": "Clara Wijaya (Contributor)",
+    "time": "2 days ago",
+    "link": "/open-projects/400"
+  }
+]
