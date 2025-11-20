@@ -25,6 +25,7 @@ import BuyerProfile from "./pages/seeker/BuyerProfile";
 import SellerProfile from "./pages/contributor/SellerProfile";
 import MyJobs from "./pages/contributor/MyJobs";
 import JobDetail from "./pages/contributor/JobDetail";
+import ActiveDeals from "./pages/shared/ActiveDeals";
 
 const queryClient = new QueryClient();
 
@@ -56,6 +57,7 @@ const App = () => (
             <Route path="/browse-jobs" element={<BrowseJobs />} />
             <Route path="/create-jobs" element={<CreateJobs />} />
             <Route path="/see-requester" element={<SeeRequester />} />
+            <Route path="/active-deals" element={<ActiveDeals />} />
             {/* <Route path="/signup" element={<SignupPage />} /> */}
             <Route path="*" element={<NotFound />} />
           </Routes>

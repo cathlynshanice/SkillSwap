@@ -41,7 +41,7 @@ interface Session {
   id: number;
   session_datetime: string;
   meeting_link: string | null;
-  services: { title: string } | null;
+  services: { title: string }[] | null;
 }
 
 interface UserSettings {
@@ -338,8 +338,22 @@ const SellerProfile = () => {
                         {sessions.map((session) => (
                           <Card key={session.id} className="p-4">
                             <div className="flex items-center justify-between">
-                              <div className="space-y-1 flex-1"><p className="font-semibold">{session.services?.title || "Service"}</p><p className="text-sm text-gray-500"><Calendar className="h-3.5 w-3.5 inline-block mr-1.5 -mt-1"/>{new Date(session.session_datetime).toLocaleString()}</p></div>
-                              <Button size="sm" asChild disabled={!session.meeting_link}><a href={session.meeting_link || ""} target="_blank" rel="noopener noreferrer"><Video className="h-4 w-4 mr-2" />Join Meeting</a></Button>
+                              <div className="space-y-1 flex-1">
+                                <p className="font-semibold">
+                                  {session.services && session.services.length > 0
+                                    ? session.services.map((s) => s.title).join(", ")
+                                    : "Service"}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  <Calendar className="h-3.5 w-3.5 inline-block mr-1.5 -mt-1" />
+                                  {new Date(session.session_datetime).toLocaleString()}
+                                </p>
+                              </div>
+                              <Button size="sm" asChild disabled={!session.meeting_link}>
+                                <a href={session.meeting_link || ""} target="_blank" rel="noopener noreferrer">
+                                  <Video className="h-4 w-4 mr-2" />Join Meeting
+                                </a>
+                              </Button>
                             </div>
                           </Card>
                         ))}

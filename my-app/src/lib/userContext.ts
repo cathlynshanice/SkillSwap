@@ -3,12 +3,14 @@ export const mockUser = {
   id: "user_001",
   name: "New User",
   email: "user@skillswap.com",
-  role: "seller" as "buyer" | "seller", // Default role
+  role: "seller" as "buyer" | "seller" | "both", // Default role
   isVerified: true,
 };
 
+export const isBothRoles = () => mockUser.role === "both"; // Add this line
+
 // Function to update the role dynamically
-export const setUserRole = (role: "buyer" | "seller") => {
+export const setUserRole = (role: "buyer" | "seller" | "both") => {
   mockUser.role = role;
   // notify runtime listeners so UI can react without full reload
   try {

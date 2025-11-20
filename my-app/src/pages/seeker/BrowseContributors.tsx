@@ -102,7 +102,10 @@ const BrowseContributors = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6">
               {filteredContributors.map((contributor) => (
-                <Card key={contributor.id} className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer">
+                <Card
+                  key={contributor.id}
+                  className="overflow-hidden hover:shadow-lg transition-shadow cursor-pointer flex flex-col justify-between h-[300px] min-h-[300px]"
+                >
                   <div className="flex items-center gap-4 p-4">
                     <User className="h-10 w-10 text-primary" />
                     <div className="flex-1">
@@ -112,7 +115,7 @@ const BrowseContributors = () => {
                       <Badge variant="secondary" className="text-xs">{contributor.major}</Badge>
                     </div>
                   </div>
-                  <div className="px-4 pb-4">
+                  <div className="px-4 pb-4 flex-1 flex flex-col">
                     <p className="text-sm text-gray-600 dark:text-gray-400 mb-2 line-clamp-2">
                       {contributor.description}
                     </p>
@@ -121,17 +124,25 @@ const BrowseContributors = () => {
                         <Badge key={idx} variant="secondary" className="text-xs">{tag}</Badge>
                       ))}
                     </div>
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center justify-end gap-2">
-                        <span className="font-bold text-primary">Rp{contributor.price.toLocaleString()}</span>
-                        {contributor.barter && (
-                          <Badge variant="default" className="text-xs flex items-center gap-1">
+                    <div className="flex items-end justify-between mt-auto">
+                      {/* Price and Barter (standardized, always same height) */}
+                      <div className="flex flex-col items-start min-w-[110px]">
+                        {contributor.barter ? (
+                          <Badge variant="default" className="text-xs flex items-center gap-1 mb-1">
                             <Handshake className="h-3 w-3" /> Barter
                           </Badge>
+                        ) : (
+                          <div className="mb-1" style={{ height: "24px" }}></div>
                         )}
+                        <span className="font-bold text-primary">Rp{contributor.price.toLocaleString()}</span>
                       </div>
+                      {/* Buttons */}
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => navigate("/messages")}
+                        >
                           <MessageCircle className="h-4 w-4 mr-1" /> Chat
                         </Button>
                         <Button
