@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { User, Search, MessageCircle, Handshake } from "lucide-react";
+import { MoreVertical, User, Search, MessageCircle, Handshake } from "lucide-react";
 import ProfileSidebar from "@/components/ProfileSidebar";
 import { Input } from "@/components/ui/input";
 
@@ -56,16 +56,22 @@ const BrowseContributors = () => {
       <ProfileSidebar />
 
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
+        {/* Top Header */}
         <header className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700 px-6 py-3 flex items-center justify-between flex-shrink-0">
           <div className="flex items-center gap-2 text-sm">
             <button
+              onClick={() => navigate('/home')}
               className="text-gray-600 hover:text-gray-900 dark:text-gray-400 dark:hover:text-gray-100 transition-colors"
-              onClick={() => window.history.back()}
             >
               Home
             </button>
             <span className="text-gray-400">/</span>
             <span className="text-gray-900 dark:text-gray-100 font-medium">Browse Contributors</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="sm">
+              <MoreVertical className="h-4 w-4" />
+            </Button>
           </div>
         </header>
 
@@ -116,10 +122,10 @@ const BrowseContributors = () => {
                       ))}
                     </div>
                     <div className="flex items-center justify-between">
-                      <div>
+                      <div className="flex items-center justify-end gap-2">
                         <span className="font-bold text-primary">Rp{contributor.price.toLocaleString()}</span>
                         {contributor.barter && (
-                          <Badge variant="default" className="ml-2 text-xs flex items-center gap-1">
+                          <Badge variant="default" className="text-xs flex items-center gap-1">
                             <Handshake className="h-3 w-3" /> Barter
                           </Badge>
                         )}
