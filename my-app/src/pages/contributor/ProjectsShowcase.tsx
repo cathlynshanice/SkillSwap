@@ -2,23 +2,49 @@ import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Briefcase, Globe, Play, MoreVertical, Plus } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import ProfileSidebar from "@/components/ProfileSidebar";
+import { supabase } from "@/lib/SupabaseClient";
+
+// Define ProfileData interface to use for state
+interface ProfileData {
+  id: string;
+  verification_status: 'UNVERIFIED' | 'PENDING' | 'VERIFIED' | 'REJECTED';
+}
 
 const ProjectsShowcase = () => {
   const navigate = useNavigate();
+  const [profileData, setProfileData] = useState<ProfileData | null>(null);
   
   useEffect(() => {
     window.scrollTo(0, 0);
+
+    const fetchProfile = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        const { data, error } = await supabase
+          .from('profiles')
+          .select('id, verification_status')
+          .eq('id', user.id)
+          .maybeSingle();
+        
+        if (error) {
+          console.error("Error fetching profile status:", error);
+        } else if (data) {
+          setProfileData(data as ProfileData);
+        }
+      }
+    };
+    fetchProfile();
   }, []);
 
   const projects: any[] = [];
 
   return (
     <div className="h-screen bg-gray-50 dark:bg-gray-900 flex overflow-hidden">
-      {/* Left Sidebar Navigation */}
-      <ProfileSidebar />
+      {/* Left Sidebar Navigation with prop */}
+      <ProfileSidebar verificationStatus={profileData?.verification_status} />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
