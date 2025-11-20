@@ -1,0 +1,351 @@
+[
+  {
+    "id": 1,
+    "name": "Alice Smith",
+    "username": "alice",
+    "avatar": "/default-avatar.png",
+    "skill": "UI/UX Design",
+    "campus": "Alam Sutera",
+    "major": "Design Communication",
+    "description": "Experienced in UI/UX for mobile and web. Open for paid and barter projects.",
+    "tags": ["UI/UX", "Figma", "Mobile", "Web"],
+    "barter": true,
+    "price": 150000,
+    "rating": 4.8,
+    "reviews": 23,
+    "paymentMethods": ["QRIS", "E-Wallet", "Bank Transfer"],
+    "deals": ["Paid", "Barter"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio1.png", "alt": "Portfolio 1" },
+      { "type": "image", "src": "/portfolio2.png", "alt": "Portfolio 2" },
+      { "type": "link", "url": "https://dribbble.com/alice", "label": "Dribbble" }
+    ],
+    "userReviews": [
+      { "user": "Budi Santoso", "rating": 5, "text": "Great designer, fast and communicative!" },
+      { "user": "Clara Wijaya", "rating": 4.5, "text": "Very creative and helpful for my project." }
+    ]
+  },
+  {
+    "id": 2,
+    "name": "Budi Santoso",
+    "username": "budi",
+    "avatar": "/default-avatar.png",
+    "skill": "Math Tutoring",
+    "campus": "Kemanggisan",
+    "major": "Mathematics",
+    "description": "Math tutor for all BINUS students. Available for online and offline sessions.",
+    "tags": ["Math", "Tutoring", "Online", "Offline"],
+    "barter": false,
+    "price": 100000,
+    "rating": 4.6,
+    "reviews": 15,
+    "paymentMethods": ["QRIS", "Bank Transfer"],
+    "deals": ["Paid"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio3.png", "alt": "Portfolio 3" }
+    ],
+    "userReviews": [
+      { "user": "Alice Smith", "rating": 5, "text": "Helped me pass my exams!" }
+    ]
+  },
+  {
+    "id": 3,
+    "name": "Clara Wijaya",
+    "username": "clara",
+    "avatar": "/default-avatar.png",
+    "skill": "Video Editing",
+    "campus": "Bekasi",
+    "major": "Film",
+    "description": "Professional video editor for events and social media. Accepts barter for creative projects.",
+    "tags": ["Video", "Editing", "Premiere", "Events"],
+    "barter": true,
+    "price": 200000,
+    "rating": 4.9,
+    "reviews": 30,
+    "paymentMethods": ["E-Wallet", "Bank Transfer"],
+    "deals": ["Paid", "Barter"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio4.png", "alt": "Portfolio 4" },
+      { "type": "link", "url": "https://youtube.com/clara", "label": "YouTube" }
+    ],
+    "userReviews": [
+      { "user": "Dewi Lestari", "rating": 5, "text": "Amazing editing skills!" }
+    ]
+  },
+  {
+    "id": 4,
+    "name": "Dewi Lestari",
+    "username": "dewi",
+    "avatar": "/default-avatar.png",
+    "skill": "Proofreading",
+    "campus": "Kemanggisan",
+    "major": "English Literature",
+    "description": "Proofreading for academic papers and creative writing. Fast turnaround.",
+    "tags": ["Proofreading", "English", "Writing"],
+    "barter": false,
+    "price": 80000,
+    "rating": 4.7,
+    "reviews": 12,
+    "paymentMethods": ["QRIS", "E-Wallet"],
+    "deals": ["Paid"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio5.png", "alt": "Portfolio 5" }
+    ],
+    "userReviews": [
+      { "user": "Clara Wijaya", "rating": 4.5, "text": "Very thorough and quick!" }
+    ]
+  },
+  {
+    "id": 5,
+    "name": "Eko Prasetyo",
+    "username": "eko",
+    "avatar": "/default-avatar.png",
+    "skill": "Web Development",
+    "campus": "Alam Sutera",
+    "major": "Computer Science",
+    "description": "Building modern websites and web apps. Open for freelance and barter.",
+    "tags": ["Web", "React", "Node.js", "Freelance"],
+    "barter": true,
+    "price": 250000,
+    "rating": 4.8,
+    "reviews": 18,
+    "paymentMethods": ["QRIS", "Bank Transfer"],
+    "deals": ["Paid", "Barter"],
+    "portfolio": [
+      { "type": "link", "url": "https://github.com/eko", "label": "GitHub" }
+    ],
+    "userReviews": [
+      { "user": "Alice Smith", "rating": 5, "text": "Fast and reliable developer!" }
+    ]
+  },
+  {
+    "id": 6,
+    "name": "Fajar Hidayat",
+    "username": "fajar",
+    "avatar": "/default-avatar.png",
+    "skill": "Photography",
+    "campus": "Bekasi",
+    "major": "Visual Arts",
+    "description": "Event and portrait photographer. Accepts barter for creative projects.",
+    "tags": ["Photography", "Events", "Portrait", "Barter"],
+    "barter": true,
+    "price": 180000,
+    "rating": 4.7,
+    "reviews": 20,
+    "paymentMethods": ["E-Wallet", "Bank Transfer"],
+    "deals": ["Paid", "Barter"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio6.png", "alt": "Portfolio 6" }
+    ],
+    "userReviews": [
+      { "user": "Budi Santoso", "rating": 4.5, "text": "Great photos for my graduation!" }
+    ]
+  },
+  {
+    "id": 7,
+    "name": "Gita Sari",
+    "username": "gita",
+    "avatar": "/default-avatar.png",
+    "skill": "MC & Hosting",
+    "campus": "Kemanggisan",
+    "major": "Communication",
+    "description": "Experienced MC for campus and private events.",
+    "tags": ["MC", "Hosting", "Events"],
+    "barter": false,
+    "price": 120000,
+    "rating": 4.6,
+    "reviews": 10,
+    "paymentMethods": ["QRIS", "E-Wallet"],
+    "deals": ["Paid"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio7.png", "alt": "Portfolio 7" }
+    ],
+    "userReviews": [
+      { "user": "Eko Prasetyo", "rating": 5, "text": "Very professional and fun!" }
+    ]
+  },
+  {
+    "id": 8,
+    "name": "Hendra Wijaya",
+    "username": "hendra",
+    "avatar": "/default-avatar.png",
+    "skill": "Graphic Design",
+    "campus": "Alam Sutera",
+    "major": "Design Communication",
+    "description": "Logo, poster, and branding design. Open for freelance.",
+    "tags": ["Design", "Logo", "Branding", "Poster"],
+    "barter": false,
+    "price": 130000,
+    "rating": 4.7,
+    "reviews": 14,
+    "paymentMethods": ["Bank Transfer"],
+    "deals": ["Paid"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio8.png", "alt": "Portfolio 8" }
+    ],
+    "userReviews": [
+      { "user": "Gita Sari", "rating": 4.5, "text": "Loved the logo design!" }
+    ]
+  },
+  {
+    "id": 9,
+    "name": "Intan Permata",
+    "username": "intan",
+    "avatar": "/default-avatar.png",
+    "skill": "Translation",
+    "campus": "Kemanggisan",
+    "major": "English Literature",
+    "description": "English-Indonesian translation for academic and creative works.",
+    "tags": ["Translation", "English", "Indonesian"],
+    "barter": false,
+    "price": 90000,
+    "rating": 4.8,
+    "reviews": 11,
+    "paymentMethods": ["QRIS", "E-Wallet"],
+    "deals": ["Paid"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio9.png", "alt": "Portfolio 9" }
+    ],
+    "userReviews": [
+      { "user": "Hendra Wijaya", "rating": 5, "text": "Fast and accurate translation!" }
+    ]
+  },
+  {
+    "id": 10,
+    "name": "Joko Susilo",
+    "username": "joko",
+    "avatar": "/default-avatar.png",
+    "skill": "Video Production",
+    "campus": "Bekasi",
+    "major": "Film",
+    "description": "Video production for events and social media.",
+    "tags": ["Video", "Production", "Events"],
+    "barter": true,
+    "price": 210000,
+    "rating": 4.9,
+    "reviews": 16,
+    "paymentMethods": ["E-Wallet", "Bank Transfer"],
+    "deals": ["Paid", "Barter"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio10.png", "alt": "Portfolio 10" }
+    ], 
+    "userReviews": [
+      { "user": "Intan Permata", "rating": 5, "text": "Great video for our event!" }
+    ]
+  },
+  {
+    "id": 11,
+    "name": "Kiki Pratama",
+    "username": "kiki",
+    "avatar": "/default-avatar.png",
+    "skill": "Social Media Management",
+    "campus": "Alam Sutera",
+    "major": "Communication",
+    "description": "Managing and growing social media accounts.",
+    "tags": ["Social Media", "Management", "Growth"],
+    "barter": false,
+    "price": 110000,
+    "rating": 4.7,
+    "reviews": 13,
+    "paymentMethods": ["QRIS", "E-Wallet"],
+    "deals": ["Paid"],
+    "portfolio": [
+      { "type": "link", "url": "https://instagram.com/kiki", "label": "Instagram" }
+    ],
+    "userReviews": [
+      { "user": "Joko Susilo", "rating": 4.5, "text": "Helped my business grow!" }
+    ]
+  },
+  {
+    "id": 12,
+    "name": "Lina Kusuma",
+    "username": "lina",
+    "avatar": "/default-avatar.png",
+    "skill": "Tutoring Bahasa Indonesia",
+    "campus": "Kemanggisan",
+    "major": "Indonesian Literature",
+    "description": "Bahasa Indonesia tutoring for academic and creative writing.",
+    "tags": ["Tutoring", "Bahasa Indonesia", "Writing"],
+    "barter": false,
+    "price": 95000,
+    "rating": 4.8,
+    "reviews": 10,
+    "paymentMethods": ["Bank Transfer"],
+    "deals": ["Paid"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio11.png", "alt": "Portfolio 11" }
+    ],
+    "userReviews": [
+      { "user": "Kiki Pratama", "rating": 5, "text": "Very patient and knowledgeable!" }
+    ]
+  },
+  {
+    "id": 13,
+    "name": "Mira Putri",
+    "username": "mira",
+    "avatar": "/default-avatar.png",
+    "skill": "Event Planning",
+    "campus": "Bekasi",
+    "major": "Management",
+    "description": "Planning and organizing campus and private events.",
+    "tags": ["Event", "Planning", "Management"],
+    "barter": true,
+    "price": 170000,
+    "rating": 4.7,
+    "reviews": 12,
+    "paymentMethods": ["QRIS", "E-Wallet"],
+    "deals": ["Paid", "Barter"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio12.png", "alt": "Portfolio 12" }
+    ],
+    "userReviews": [
+      { "user": "Lina Kusuma", "rating": 4.5, "text": "Organized our event perfectly!" }
+    ]
+  },
+  {
+    "id": 14,
+    "name": "Nina Sari",
+    "username": "nina",
+    "avatar": "/default-avatar.png",
+    "skill": "Copywriting",
+    "campus": "Alam Sutera",
+    "major": "Communication",
+    "description": "Copywriting for ads, websites, and social media.",
+    "tags": ["Copywriting", "Ads", "Web", "Social Media"],
+    "barter": false,
+    "price": 120000,
+    "rating": 4.8,
+    "reviews": 14,
+    "paymentMethods": ["QRIS", "Bank Transfer"],
+    "deals": ["Paid"],
+    "portfolio": [
+      { "type": "image", "src": "/portfolio13.png", "alt": "Portfolio 13" }
+    ],
+    "userReviews": [
+      { "user": "Mira Putri", "rating": 5, "text": "Great copy for my website!" }
+    ]
+  },
+  {
+    "id": 15,
+    "name": "Oscar Pratama",
+    "username": "oscar",
+    "avatar": "/default-avatar.png",
+    "skill": "App Development",
+    "campus": "Kemanggisan",
+    "major": "Computer Science",
+    "description": "Mobile and web app development. Open for freelance and barter.",
+    "tags": ["App", "Mobile", "Web", "Development"],
+    "barter": true,
+    "price": 300000,
+    "rating": 4.9,
+    "reviews": 16,
+    "paymentMethods": ["QRIS", "E-Wallet", "Bank Transfer"],
+    "deals": ["Paid", "Barter"],
+    "portfolio": [
+      { "type": "link", "url": "https://github.com/oscar", "label": "GitHub" }
+    ],
+    "userReviews": [
+      { "user": "Nina Sari", "rating": 5, "text": "Built my app quickly and professionally!" }
+    ]
+  }
+] 

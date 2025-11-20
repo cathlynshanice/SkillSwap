@@ -10,6 +10,12 @@ export const mockUser = {
 // Function to update the role dynamically
 export const setUserRole = (role: "buyer" | "seller") => {
   mockUser.role = role;
+  // notify runtime listeners so UI can react without full reload
+  try {
+    window.dispatchEvent(new CustomEvent("mockUserRoleChanged", { detail: role }));
+  } catch (e) {
+    /* ignore (server-side test env) */
+  }
 };
 
 export const getUserRole = () => mockUser.role;

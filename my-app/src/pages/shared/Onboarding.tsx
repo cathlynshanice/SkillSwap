@@ -1,32 +1,39 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/SupabaseClient";
 
 export default function OnboardingPage() {
   const navigate = useNavigate();
   
-  // Basic Information
+  // State for form fields
   const [name, setName] = useState("");
   const [studentId, setStudentId] = useState("");
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(""); // This will be pre-filled and read-only
   const [secondaryEmail, setSecondaryEmail] = useState("");
   const [phone, setPhone] = useState("");
-  
-  // Academic Information
   const [major, setMajor] = useState("");
   const [semester, setSemester] = useState("");
   const [campus, setCampus] = useState("");
-  
-  // Location & Languages
   const [location, setLocation] = useState("");
   const [languages, setLanguages] = useState("");
-  
-  // About
   const [bio, setBio] = useState("");
   
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
+
+  // Fetch the user's primary email when the component mounts
+  useEffect(() => {
+    const fetchUserEmail = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setEmail(user.email || "");
+      } else {
+        setError("User not authenticated. Please log in again.");
+      }
+    };
+    fetchUserEmail();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,11 +47,11 @@ export default function OnboardingPage() {
       return;
     }
 
+    // The 'email' field is removed from this object because it does not exist in the 'profiles' table.
     const { error } = await supabase.from("profiles").upsert({
       id: user.id,
       name,
       student_id: studentId,
-      email,
       secondary_email: secondaryEmail || null,
       phone,
       major,
@@ -60,7 +67,8 @@ export default function OnboardingPage() {
 
     if (error) {
       setError(error.message);
-    } else {
+    }
+    else {
       navigate("/home");
     }
   };
@@ -96,14 +104,17 @@ export default function OnboardingPage() {
               required
             />
             
-            <input
-              type="email"
-              placeholder="Primary Email *"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="border rounded-lg p-2.5 w-full focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              required
-            />
+            {/* Primary Email is now read-only as it's the login identifier */}
+            <div>
+              <label className="text-sm font-medium text-gray-600">Primary Email (from login)</label>
+              <input
+                type="email"
+                placeholder="Primary Email *"
+                value={email}
+                readOnly
+                className="border rounded-lg p-2.5 w-full bg-gray-100 cursor-not-allowed mt-1"
+              />
+            </div>
             
             <input
               type="email"
