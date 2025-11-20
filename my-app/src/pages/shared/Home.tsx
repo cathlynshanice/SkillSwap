@@ -1,4 +1,4 @@
-import HomeNavbar from "@/components/HomeNavbar";
+import HomeNavbar from "@/components/Home";
 import Footer from "@/components/Footer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle, X } from "lucide-react";

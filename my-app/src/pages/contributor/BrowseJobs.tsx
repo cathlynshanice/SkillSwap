@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Search, Filter, Clock, DollarSign, Briefcase, X } from "lucide-react";
-import HomeNavbar from "@/components/HomeNavbar";
+import Home from "@/components/Home";
 import Footer from "@/components/Footer";
 import { supabase } from "@/lib/SupabaseClient";
 import { useNavigate } from "react-router-dom";
@@ -121,7 +121,7 @@ export default function BrowseJobs() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <HomeNavbar />
+      <Home />
 
       {/* --- Trade Modal --- */}
       {isModalOpen && (
