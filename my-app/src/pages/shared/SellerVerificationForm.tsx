@@ -14,10 +14,10 @@ import { Loader2, UploadCloud, FileCheck2, AlertTriangle, CheckCircle, Tags, Ban
 import { Progress } from '@/components/ui/progress';
 
 const STEPS = [
-  { step: 1, title: 'Validasi Data Diri', icon: <User className="h-4 w-4" /> },
-  { step: 2, title: 'Portofolio & Keahlian', icon: <Tags className="h-4 w-4" /> },
-  { step: 3, title: 'Info Pembayaran', icon: <Banknote className="h-4 w-4" /> },
-  { step: 4, title: 'Pakta Integritas', icon: <ShieldCheck className="h-4 w-4" /> },
+  { step: 1, title: 'Personal Information', icon: <User className="h-4 w-4" /> },
+  { step: 2, title: 'Portfolio & Skills', icon: <Tags className="h-4 w-4" /> },
+  { step: 3, title: 'Payment Information', icon: <Banknote className="h-4 w-4" /> },
+  { step: 4, title: 'Integrity Pact', icon: <ShieldCheck className="h-4 w-4" /> },
 ];
 
 interface FormData {
@@ -94,7 +94,7 @@ const SellerVerificationForm = () => {
       setFormData(prev => ({ ...prev, ktm_image_url: publicUrl }));
 
     } catch (error: any) {
-      setUploadError('Gagal mengunggah file. Pastikan formatnya benar dan ukuran tidak melebihi batas.');
+      setUploadError('File upload failed. Please ensure the format is correct and the size does not exceed the limit.');
       console.error('File upload error:', error);
     } finally {
       setIsUploading(false);
@@ -123,12 +123,12 @@ const SellerVerificationForm = () => {
       
       if (error) throw error;
       
-      // On success, redirect user to the landing page
-      navigate('/landing'); // Redirect to where HomeNavbar is typically rendered
+      // On success, show a final "completed" step
+      setCurrentStep(STEPS.length + 1);
 
     } catch (error) {
       console.error('Submission error:', error);
-      alert('Terjadi kesalahan saat mengirimkan data. Silakan coba lagi.');
+      alert('An error occurred while submitting your data. Please try again.');
     } finally {
       setIsLoading(false);
     }
@@ -146,24 +146,24 @@ const SellerVerificationForm = () => {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             {STEPS.find(s => s.step === currentStep)?.icon}
-            {currentStep <= STEPS.length ? `Langkah ${currentStep} dari ${STEPS.length}: ${STEPS[currentStep - 1].title}` : 'Selesai!'}
+            {currentStep <= STEPS.length ? `Step ${currentStep} of ${STEPS.length}: ${STEPS[currentStep - 1].title}` : 'Done!'}
           </CardTitle>
           <CardDescription>
-            {currentStep <= STEPS.length ? 'Lengkapi data berikut untuk menjadi Penjual di SkillSwap.' : 'Data Anda telah dikirim. Kami akan meninjau aplikasi Anda.'}
+            {currentStep <= STEPS.length ? 'Complete the following to become a Seller on SkillSwap.' : 'Your application has been submitted. We will review it shortly.'}
           </CardDescription>
           {currentStep <= STEPS.length && <Progress value={progressValue} className="mt-2" />}
         </CardHeader>
 
         <CardContent>
-          {/* Step 1: Data Diri */}
+          {/* Step 1: Personal Information */}
           {currentStep === 1 && (
             <div className="space-y-4">
               <div>
-                <Label htmlFor="studentId">NIM (Nomor Induk Mahasiswa)</Label>
+                <Label htmlFor="studentId">Student ID (NIM)</Label>
                 <Input id="studentId" value={studentId} readOnly className="bg-gray-100 dark:bg-gray-800" />
               </div>
               <div>
-                <Label htmlFor="ktm">Upload Foto KTM</Label>
+                <Label htmlFor="ktm">Upload Student ID Card (KTM)</Label>
                 <div className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 dark:border-gray-600 border-dashed rounded-md">
                   <div className="space-y-1 text-center">
                     {isUploading ? <Loader2 className="mx-auto h-12 w-12 text-gray-400 animate-spin" /> : 
@@ -171,12 +171,12 @@ const SellerVerificationForm = () => {
                      <UploadCloud className="mx-auto h-12 w-12 text-gray-400" />}
                     <div className="flex text-sm text-gray-600 dark:text-gray-400">
                       <Label htmlFor="ktm-upload" className="relative cursor-pointer bg-white dark:bg-gray-900 rounded-md font-medium text-primary hover:text-primary-focus">
-                        <span>{isUploading ? "Mengunggah..." : (formData.ktm_image_url ? "Ganti File" : "Pilih file untuk diunggah")}</span>
+                        <span>{isUploading ? "Uploading..." : (formData.ktm_image_url ? "Change File" : "Choose a file to upload")}</span>
                         <Input id="ktm-upload" name="ktm-upload" type="file" className="sr-only" onChange={handleFileChange} accept="image/png, image/jpeg" disabled={isUploading} />
                       </Label>
                     </div>
                     <p className="text-xs text-gray-500 dark:text-gray-500">
-                      {isUploading ? "Mohon tunggu..." : (formData.ktm_image_url ? "File berhasil diunggah!" : "PNG, JPG hingga 2MB")}
+                      {isUploading ? "Please wait..." : (formData.ktm_image_url ? "File uploaded successfully!" : "PNG, JPG up to 2MB")}
                     </p>
                   </div>
                 </div>
@@ -189,12 +189,12 @@ const SellerVerificationForm = () => {
           {currentStep === 2 && (
             <div className="space-y-4">
               <div>
-                <Label htmlFor="portfolio">URL Portofolio (opsional)</Label>
+                <Label htmlFor="portfolio">Portfolio URL (optional)</Label>
                 <Input id="portfolio" placeholder="https://behance.net/username" value={formData.portfolio_url} onChange={(e) => setFormData(prev => ({...prev, portfolio_url: e.target.value}))}/>
               </div>
               <div>
-                <Label htmlFor="skills">Keahlian (pisahkan dengan koma)</Label>
-                <Input id="skills" placeholder="cth: Desain Grafis, React, Public Speaking" value={formData.skills.join(', ')} onChange={handleSkillsChange}/>
+                <Label htmlFor="skills">Skills (separate with a comma)</Label>
+                <Input id="skills" placeholder="e.g., Graphic Design, React, Public Speaking" value={formData.skills.join(', ')} onChange={handleSkillsChange}/>
               </div>
             </div>
           )}
@@ -203,11 +203,11 @@ const SellerVerificationForm = () => {
           {currentStep === 3 && (
              <div className="space-y-4">
               <div>
-                <Label htmlFor="bankName">Nama Bank</Label>
-                <Input id="bankName" placeholder="Contoh: BCA" value={formData.bank_account_details.bank_name} onChange={(e) => setFormData(prev => ({...prev, bank_account_details: {...prev.bank_account_details, bank_name: e.target.value}}))}/>
+                <Label htmlFor="bankName">Bank Name</Label>
+                <Input id="bankName" placeholder="Example: BCA" value={formData.bank_account_details.bank_name} onChange={(e) => setFormData(prev => ({...prev, bank_account_details: {...prev.bank_account_details, bank_name: e.target.value}}))}/>
               </div>
               <div>
-                <Label htmlFor="accountNumber">Nomor Rekening</Label>
+                <Label htmlFor="accountNumber">Account Number</Label>
                 <Input id="accountNumber" placeholder="1234567890" value={formData.bank_account_details.account_number} onChange={(e) => setFormData(prev => ({...prev, bank_account_details: {...prev.bank_account_details, account_number: e.target.value}}))}/>
               </div>
             </div>
@@ -219,10 +219,10 @@ const SellerVerificationForm = () => {
               <Checkbox id="integrityPact" checked={formData.integrity_pact_accepted} onCheckedChange={(checked) => setFormData(prev => ({ ...prev, integrity_pact_accepted: !!checked }))} />
               <div className="grid gap-1.5 leading-none">
                 <Label htmlFor="integrityPact" className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-                  Pakta Integritas Akademik
+                  Academic Integrity Pact
                 </Label>
                 <p className="text-sm text-muted-foreground">
-                  Saya berjanji tidak akan menyediakan, menawarkan, atau terlibat dalam segala bentuk kecurangan akademik, termasuk namun tidak terbatas pada pengerjaan tugas akhir (skripsi/tesis), ujian, atau tugas-tugas lain yang dinilai secara individual.
+                  I pledge not to provide, offer, or engage in any form of academic dishonesty, including but not limited to completing final assignments (theses), exams, or other individually assessed tasks for others.
                 </p>
               </div>
             </div>
@@ -232,8 +232,8 @@ const SellerVerificationForm = () => {
           {currentStep > STEPS.length && (
             <div className="text-center py-8">
               <CheckCircle className="mx-auto h-16 w-16 text-green-500 mb-4" />
-              <h3 className="text-lg font-semibold">Pengajuan Terkirim!</h3>
-              <p className="text-muted-foreground text-sm mt-2">Tim kami akan mereview pengajuan Anda dalam 1-3 hari kerja. Status verifikasi akan diperbarui di profil Anda.</p>
+              <h3 className="text-lg font-semibold">Submission Sent!</h3>
+              <p className="text-muted-foreground text-sm mt-2">Our team will review your submission within 1-3 business days. Your verification status will be updated on your profile.</p>
             </div>
           )}
         </CardContent>
@@ -242,19 +242,19 @@ const SellerVerificationForm = () => {
             {currentStep <= STEPS.length ? (
               <>
                 <Button variant="outline" onClick={prevStep} disabled={currentStep === 1 || isLoading}>
-                  Kembali
+                  Back
                 </Button>
                 {currentStep < STEPS.length ? (
-                  <Button onClick={nextStep}>Lanjutkan</Button>
+                  <Button onClick={nextStep}>Continue</Button>
                 ) : (
                   <Button onClick={handleSubmit} disabled={!formData.integrity_pact_accepted || isLoading}>
                     {isLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : null}
-                    Kirim untuk Verifikasi
+                    Submit for Verification
                   </Button>
                 )}
               </>
             ) : (
-              <Button className="w-full" onClick={() => navigate('/buyer-profile')}>Kembali ke Profil</Button>
+              <Button className="w-full" onClick={() => navigate('/buyer-profile')}>Back to Profile</Button>
             )}
         </CardFooter>
       </Card>

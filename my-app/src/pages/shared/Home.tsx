@@ -15,21 +15,25 @@ const Home = () => {
       const { data: { user } } = await supabase.auth.getUser();
 
       if (user) {
-        const { data: profile, error } = await supabase
+        const { data: profiles, error } = await supabase
           .from('profiles')
           .select('name, student_id, campus, major, phone')
           .eq('id', user.id)
-          .single();
+          .limit(1); // Use limit(1) instead of single() for resilience
 
         if (error) {
           console.error("Error fetching profile for reminder:", error);
           return;
         }
 
-        if (profile) {
+        if (profiles && profiles.length > 0) {
+          const profile = profiles[0];
           // Check if any of the required fields are null or empty strings
           const incomplete = !profile.name || !profile.student_id || !profile.campus || !profile.major || !profile.phone;
           setIsProfileIncomplete(incomplete);
+        } else {
+          // If no profile is found, it's considered incomplete
+          setIsProfileIncomplete(true);
         }
       }
     };

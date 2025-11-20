@@ -1,7 +1,7 @@
 import {
   User, Calendar, MapPin, Phone, Mail, Globe, GraduationCap,
   Pencil, MoreVertical, CalendarDays, Video, Settings,
-  ShoppingBag, Heart, Edit, Rocket, Clock, XCircle
+  ShoppingBag, Heart, Edit, Rocket, Clock, XCircle, AlertTriangle
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { RealtimeChannel } from "@supabase/supabase-js";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type VerificationStatus = 'unverified' | 'pending' | 'verified' | 'rejected';
 
@@ -68,7 +69,7 @@ interface UserSettings {
 /**
  * A dedicated card component to show seller verification status and CTA.
  */
-const SellerStatusCard = ({ status, loading }: { status: VerificationStatus, loading: boolean }) => {
+const SellerStatusCard = ({ status, loading, isProfileComplete }: { status: VerificationStatus, loading: boolean, isProfileComplete: boolean }) => {
   const navigate = useNavigate();
 
   if (loading) {
@@ -80,9 +81,9 @@ const SellerStatusCard = ({ status, loading }: { status: VerificationStatus, loa
     return (
       <Alert>
         <Clock className="h-4 w-4" />
-        <AlertTitle>Pengajuan Anda Sedang Ditinjau</AlertTitle>
+        <AlertTitle>Your Application is Under Review</AlertTitle>
         <AlertDescription>
-          Tim kami sedang mereview aplikasi Anda untuk menjadi kontributor. Anda akan menerima notifikasi setelah proses selesai (biasanya 1-3 hari kerja).
+          Our team is reviewing your application to become a contributor. You will receive a notification once the process is complete (usually within 1-3 business days).
         </AlertDescription>
       </Alert>
     );
@@ -93,11 +94,11 @@ const SellerStatusCard = ({ status, loading }: { status: VerificationStatus, loa
     return (
        <Alert variant="destructive">
         <XCircle className="h-4 w-4" />
-        <AlertTitle>Pengajuan Ditolak</AlertTitle>
+        <AlertTitle>Application Rejected</AlertTitle>
         <AlertDescription>
-          Sayangnya, pengajuan Anda sebelumnya belum dapat kami setujui. Silakan periksa kembali data Anda dan coba lagi.
+          Unfortunately, your previous application could not be approved. Please check your data and try again.
           <Button variant="link" className="p-0 h-auto ml-1" onClick={() => navigate('/seller-verification')}>
-            Ajukan Ulang
+            Re-apply
           </Button>
         </AlertDescription>
       </Alert>
@@ -109,24 +110,44 @@ const SellerStatusCard = ({ status, loading }: { status: VerificationStatus, loa
     return (
       <Card className="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Rocket /> Jadilah Kontributor!</CardTitle>
+          <CardTitle className="flex items-center gap-2"><Rocket /> Become a Contributor!</CardTitle>
           <CardDescription className="text-primary-foreground/80">
-            Tawarkan keahlian Anda kepada mahasiswa lain dan mulailah mendapatkan penghasilan.
+            Offer your skills to other students and start earning.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm">
-            Dengan menjadi kontributor, Anda dapat memposting layanan, membangun portofolio, dan menjangkau ribuan calon klien di lingkungan BINUS University.
+            By becoming a contributor, you can post services, build your portfolio, and reach thousands of potential clients within BINUS University.
           </p>
         </CardContent>
         <CardFooter>
-          <Button 
-            variant="secondary" 
-            className="w-full"
-            onClick={() => navigate('/seller-verification')}
-          >
-            Mulai Proses Verifikasi
-          </Button>
+          {isProfileComplete ? (
+            <Button 
+              variant="secondary" 
+              className="w-full"
+              onClick={() => navigate('/seller-verification')}
+            >
+              Start Verification Process
+            </Button>
+          ) : (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <div className="w-full cursor-not-allowed">
+                  <Button 
+                    variant="secondary" 
+                    className="w-full"
+                    disabled
+                    style={{ pointerEvents: 'none' }} // Important for disabled buttons in tooltips
+                  >
+                    Start Verification Process
+                  </Button>
+                </div>
+              </TooltipTrigger>
+              <TooltipContent>
+                <p>Complete your name, student ID, major, campus, and phone number to continue.</p>
+              </TooltipContent>
+            </Tooltip>
+          )}
         </CardFooter>
       </Card>
     );
@@ -333,6 +354,15 @@ const BuyerProfile = () => {
     }
   };
 
+  const isProfileComplete = !!(
+    profileData &&
+    profileData.name &&
+    profileData.student_id &&
+    profileData.campus &&
+    profileData.major &&
+    profileData.phone
+  );
+
   return (
     <div className="h-screen bg-gray-50 dark:bg-gray-900 flex overflow-hidden">
       {/* Left Sidebar Navigation */}
@@ -506,9 +536,11 @@ const BuyerProfile = () => {
                 {activeTab === "profile" && (
                   <div className="space-y-6">
                     {/* Seller Status CTA Card */}
+
                     <SellerStatusCard 
                       status={profileData?.verification_status || 'unverified'} 
-                      loading={loading.profile} 
+                      loading={loading.profile}
+                      isProfileComplete={isProfileComplete}
                     />
 
                     {/* About Me Section */}
