@@ -119,21 +119,15 @@ const HomeNavbar = () => {
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="start" className="w-48">
-                  <DropdownMenuItem onClick={() => navigate("/myjobs")}>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate("/myjobs?status=ALL")}>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem onClick={() => navigate("/myjobs?status=COMPLETED")}>
-                  </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/create-jobs")}>
                     Create Jobs
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => navigate("/see-requester")}>
                     See Requester
                   </DropdownMenuItem>
-                  <DropdownMenuItem>My Jobs</DropdownMenuItem>
-                  <DropdownMenuItem>All Contracts</DropdownMenuItem>
-                  <DropdownMenuItem>Work Diary</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/myjobs")}>My Jobs</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/myjobs?status=ALL")}>All Contracts</DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate("/myjobs?status=COMPLETED")}>Work Diary</DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
 
