@@ -1,45 +1,13 @@
-import HomeNavbar from "@/components/Home";
+import HomeNavbar from "@/components/HomeNavbar";
 import Footer from "@/components/Footer";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { AlertTriangle, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useState, useEffect } from "react";
-import { supabase } from "@/lib/SupabaseClient";
+import { useState } from "react";
 
 const Home = () => {
   const [showReminder, setShowReminder] = useState(true);
-  const [isProfileIncomplete, setIsProfileIncomplete] = useState(false);
-
-  useEffect(() => {
-    const checkProfileCompletion = async () => {
-      const { data: { user } } = await supabase.auth.getUser();
-
-      if (user) {
-        const { data: profiles, error } = await supabase
-          .from('profiles')
-          .select('name, student_id, campus, major, phone')
-          .eq('id', user.id)
-          .limit(1); // Use limit(1) instead of single() for resilience
-
-        if (error) {
-          console.error("Error fetching profile for reminder:", error);
-          return;
-        }
-
-        if (profiles && profiles.length > 0) {
-          const profile = profiles[0];
-          // Check if any of the required fields are null or empty strings
-          const incomplete = !profile.name || !profile.student_id || !profile.campus || !profile.major || !profile.phone;
-          setIsProfileIncomplete(incomplete);
-        } else {
-          // If no profile is found, it's considered incomplete
-          setIsProfileIncomplete(true);
-        }
-      }
-    };
-
-    checkProfileCompletion();
-  }, []); // Run this check once when the component mounts
+  const isProfileIncomplete = true; // Nanti bisa diganti dengan logic cek dari database
 
   return (
     <div className="min-h-screen bg-background">

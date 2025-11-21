@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/SupabaseClient";
 import { useNavigate } from "react-router-dom";
-import Home from "@/components/Home";
+import HomeNavbar from "@/components/HomeNavbar";
 import Footer from "@/components/Footer";
 
 const CreateJobs = () => {
@@ -102,7 +102,7 @@ const CreateJobs = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-between gap-20">
       <div>
-        <Home />
+        <HomeNavbar />
       </div>
       <div className="max-w-3xl mx-auto bg-white p-8 rounded-xl shadow-lg">
         <h1 className="text-3xl font-bold mb-4 text-gray-800">

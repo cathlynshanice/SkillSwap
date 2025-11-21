@@ -1,7 +1,7 @@
 import {
   User, Calendar, MapPin, Phone, Mail, Globe, GraduationCap,
   Pencil, MoreVertical, CalendarDays, Video, Settings,
-  ShoppingBag, Edit, Rocket, Clock, XCircle
+  ShoppingBag, Heart, Edit, Rocket, Clock, XCircle
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -15,134 +15,124 @@ import { Textarea } from "@/components/ui/textarea";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Switch } from "@/components/ui/switch";
 import { RealtimeChannel } from "@supabase/supabase-js";
-import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
-// --- Updated Data Type Interfaces to match new schema ---
-type VerificationStatus = 'UNVERIFIED' | 'PENDING' | 'VERIFIED' | 'REJECTED';
-type DealStatus = 'NEGOTIATING' | 'AWAITING_PAYMENT' | 'IN_PROGRESS' | 'DELIVERED' | 'COMPLETED' | 'DISPUTED' | 'CANCELED';
+type VerificationStatus = 'unverified' | 'pending' | 'verified' | 'rejected';
 
+// --- Data Type Interfaces ---
 interface ProfileData {
   id: string;
-  name: string | null;
-  student_id: string | null;
-  email: string | null;
+  name: string;
+  student_id: string;
+  secondary_email: string | null;
   phone: string | null;
   major: string | null;
+  semester: string | null;
   campus: string | null;
+  location: string | null;
+  languages: string[];
   bio: string | null;
-  skills: string[] | null;
   verification_status: VerificationStatus;
 }
 
+// ... (rest of the interfaces remain the same)
 interface Service {
   id: number;
   title: string;
+  description: string;
 }
 
-interface Deal {
+interface Purchase {
   id: number;
-  final_amount: number;
-  created_at: string;
+  amount: number;
+  purchase_datetime: string;
   services: Service | null;
-  status: DealStatus;
 }
 
 interface Session {
   id: number;
   session_datetime: string;
   meeting_link: string | null;
-  deal_id: number;
+  services: Service | null;
+}
+
+interface WishlistItem {
+  services: Service | null;
 }
 
 interface UserSettings {
   email_notifications_enabled: boolean;
+  session_reminders_enabled: boolean;
   profile_visibility: string;
 }
 
 /**
  * A dedicated card component to show seller verification status and CTA.
  */
-const SellerStatusCard = ({ status, loading, isProfileComplete }: { status: VerificationStatus, loading: boolean, isProfileComplete: boolean }) => {
+const SellerStatusCard = ({ status, loading }: { status: VerificationStatus, loading: boolean }) => {
   const navigate = useNavigate();
 
   if (loading) {
     return <Skeleton className="h-36 w-full" />;
   }
 
-  if (status === 'PENDING') {
+  // If status is pending, show an informational alert.
+  if (status === 'pending') {
     return (
       <Alert>
         <Clock className="h-4 w-4" />
-        <AlertTitle>Your Application is Under Review</AlertTitle>
+        <AlertTitle>Pengajuan Anda Sedang Ditinjau</AlertTitle>
         <AlertDescription>
-          Our team is reviewing your application. This usually takes 1-3 business days.
+          Tim kami sedang mereview aplikasi Anda untuk menjadi kontributor. Anda akan menerima notifikasi setelah proses selesai (biasanya 1-3 hari kerja).
         </AlertDescription>
       </Alert>
     );
   }
   
-  if (status === 'REJECTED') {
+  // If status is rejected, show an alert with a CTA to re-apply.
+  if (status === 'rejected') {
     return (
        <Alert variant="destructive">
         <XCircle className="h-4 w-4" />
-        <AlertTitle>Application Rejected</AlertTitle>
+        <AlertTitle>Pengajuan Ditolak</AlertTitle>
         <AlertDescription>
-          Your previous application could not be approved. Please check your data and try again.
+          Sayangnya, pengajuan Anda sebelumnya belum dapat kami setujui. Silakan periksa kembali data Anda dan coba lagi.
           <Button variant="link" className="p-0 h-auto ml-1" onClick={() => navigate('/seller-verification')}>
-            Re-apply
+            Ajukan Ulang
           </Button>
         </AlertDescription>
       </Alert>
     );
   }
 
-  if (status === 'UNVERIFIED') {
+  // If status is unverified, show the main CTA card.
+  if (status === 'unverified') {
     return (
       <Card className="bg-gradient-to-br from-primary to-purple-600 text-primary-foreground">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2"><Rocket /> Become a Contributor!</CardTitle>
+          <CardTitle className="flex items-center gap-2"><Rocket /> Jadilah Kontributor!</CardTitle>
           <CardDescription className="text-primary-foreground/80">
-            Offer your skills to other students and start earning.
+            Tawarkan keahlian Anda kepada mahasiswa lain dan mulailah mendapatkan penghasilan.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm">
-            By becoming a contributor, you can post services and build your portfolio.
+            Dengan menjadi kontributor, Anda dapat memposting layanan, membangun portofolio, dan menjangkau ribuan calon klien di lingkungan BINUS University.
           </p>
         </CardContent>
         <CardFooter>
-          {isProfileComplete ? (
-            <Button 
-              variant="secondary" 
-              className="w-full"
-              onClick={() => navigate('/seller-verification')}
-            >
-              Start Verification Process
-            </Button>
-          ) : (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <div className="w-full cursor-not-allowed">
-                  <Button 
-                    variant="secondary" 
-                    className="w-full"
-                    disabled
-                    style={{ pointerEvents: 'none' }}
-                  >
-                    Start Verification Process
-                  </Button>
-                </div>
-              </TooltipTrigger>
-              <TooltipContent>
-                <p>Complete your name, student ID, major, campus, and phone number to continue.</p>
-              </TooltipContent>
-            </Tooltip>
-          )}
+          <Button 
+            variant="secondary" 
+            className="w-full"
+            onClick={() => navigate('/seller-verification')}
+          >
+            Mulai Proses Verifikasi
+          </Button>
         </CardFooter>
       </Card>
     );
   }
   
+  // Don't render anything if status is verified or other cases
   return null;
 };
 
@@ -150,14 +140,17 @@ const SellerStatusCard = ({ status, loading, isProfileComplete }: { status: Veri
 const BuyerProfile = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "sessions" | "settings">("profile");
   const [profileData, setProfileData] = useState<ProfileData | null>(null);
-  const [deals, setDeals] = useState<Deal[]>([]);
+  const [userEmail, setUserEmail] = useState<string>("");
+  const [purchases, setPurchases] = useState<Purchase[]>([]);
   const [sessions, setSessions] = useState<Session[]>([]);
+  const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
   const [settings, setSettings] = useState<UserSettings | null>(null);
 
   const [loading, setLoading] = useState({
     profile: true,
-    deals: true,
+    purchases: true,
     sessions: true,
+    wishlist: true,
     settings: true,
   });
 
@@ -177,19 +170,16 @@ const BuyerProfile = () => {
         return;
       }
       
+      setUserEmail(user.email || "No primary email");
+
       // Fetch all data in parallel
       await Promise.all([
         fetchProfileData(user.id),
-        fetchDeals(user.id),
+        fetchPurchases(user.id),
+        fetchSessions(user.id),
+        fetchWishlist(user.id),
         fetchSettings(user.id)
-      ]).then((results) => {
-        const userDeals = results[1] as Deal[] | null;
-        if (userDeals && userDeals.length > 0) {
-          fetchSessions(userDeals.map(d => d.id));
-        } else {
-           setLoading(prev => ({ ...prev, sessions: false }));
-        }
-      });
+      ]);
 
       // Set up real-time subscription for profile changes
       channel = supabase
@@ -203,6 +193,7 @@ const BuyerProfile = () => {
             filter: `id=eq.${user.id}`,
           },
           (payload) => {
+            console.log('Profile updated in real-time!', payload.new);
             setProfileData(payload.new as ProfileData);
           }
         )
@@ -230,51 +221,68 @@ const BuyerProfile = () => {
     } finally {
       setLoading(prev => ({ ...prev, profile: false }));
     }
-    return null; // Return null to match Promise.all expectation
   };
 
-  const fetchDeals = async (userId: string) => {
+  const fetchPurchases = async (userId: string) => {
     try {
       const { data, error } = await supabase
-        .from("deals")
-        .select(`id, final_amount, created_at, status, services (id, title)`)
+        .from("purchases")
+        .select(`id, amount, purchase_datetime, services (id, title)`)
         .eq("buyer_id", userId)
-        .order("created_at", { ascending: false })
+        .order("purchase_datetime", { ascending: false })
         .limit(3);
       if (error) throw error;
-      setDeals(data as Deal[]);
-      return data; // Return data for chaining
+      setPurchases(data as unknown as Purchase[]);
     } catch (error) {
-      console.error("Error fetching deals:", error);
+      console.error("Error fetching purchases:", error);
     } finally {
-      setLoading(prev => ({ ...prev, deals: false }));
+      setLoading(prev => ({ ...prev, purchases: false }));
     }
-    return null;
   };
 
-  const fetchSessions = async (dealIds: number[]) => {
+  const fetchSessions = async (userId: string) => {
     try {
       const { data, error } = await supabase
         .from("sessions")
-        .select(`*`)
-        .in("deal_id", dealIds)
+        .select(`id, session_datetime, meeting_link, services (id, title)`)
+        .eq("buyer_id", userId)
         .order("session_datetime", { ascending: true });
       if (error) throw error;
-      setSessions(data as Session[]);
+      setSessions(data as unknown as Session[]);
     } catch (error) {
       console.error("Error fetching sessions:", error);
     } finally {
       setLoading(prev => ({ ...prev, sessions: false }));
     }
   };
+
+  const fetchWishlist = async (userId: string) => {
+    try {
+      const { data, error } = await supabase
+        .from("wishlist_items")
+        .select(`services (id, title, description)`)
+        .eq("user_id", userId);
+      if (error) throw error;
+      setWishlist(data as unknown as WishlistItem[]);
+    } catch (error) {
+      console.error("Error fetching wishlist:", error);
+    } finally {
+      setLoading(prev => ({ ...prev, wishlist: false }));
+    }
+  };
   
   const fetchSettings = async (userId: string) => {
     try {
+      // Remove .single() to prevent error on zero rows.
       const { data, error } = await supabase.from("user_settings").select("*").eq("user_id", userId);
       if (error) throw error;
+      
+      // If settings exist, use them. Otherwise, settings remain null.
       if (data && data.length > 0) {
         setSettings(data[0]);
       } else {
+        // Handle case where no settings row exists for the user yet.
+        // For now, we'll leave settings as null and let the UI handle it.
         setSettings(null);
       }
     } catch (error) {
@@ -282,7 +290,6 @@ const BuyerProfile = () => {
     } finally {
       setLoading(prev => ({ ...prev, settings: false }));
     }
-     return null;
   };
 
   const handleSaveBio = async () => {
@@ -296,6 +303,7 @@ const BuyerProfile = () => {
         .single();
       
       if (error) throw error;
+
       setProfileData(data as ProfileData);
       setIsEditingBio(false);
     } catch (error) {
@@ -316,6 +324,7 @@ const BuyerProfile = () => {
         .eq('user_id', profileData.id);
   
       if (error) {
+        // Revert on failure
         setSettings(settings);
         throw error;
       }
@@ -324,19 +333,10 @@ const BuyerProfile = () => {
     }
   };
 
-  const isProfileComplete = !!(
-    profileData &&
-    profileData.name &&
-    profileData.student_id &&
-    profileData.campus &&
-    profileData.major &&
-    profileData.phone
-  );
-
   return (
     <div className="h-screen bg-gray-50 dark:bg-gray-900 flex overflow-hidden">
       {/* Left Sidebar Navigation */}
-      <ProfileSidebar verificationStatus={profileData?.verification_status} />
+      <ProfileSidebar />
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col h-screen overflow-hidden">
@@ -367,10 +367,10 @@ const BuyerProfile = () => {
               {/* Profile Header */}
               <div className="flex items-center gap-3 mb-6">
                 <div className="h-14 w-14 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex-shrink-0 flex items-center justify-center text-white font-bold text-xl">
-                  {loading.profile ? <Skeleton className="h-14 w-14 rounded-full" /> : (profileData?.name?.charAt(0) || 'S').toUpperCase()}
+                  {loading.profile ? <Skeleton className="h-14 w-14 rounded-full" /> : profileData?.name.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <h2 className="font-bold text-lg">{loading.profile ? <Skeleton className="h-5 w-32" /> : profileData?.name || 'New User'}</h2>
+                  <h2 className="font-bold text-lg">{loading.profile ? <Skeleton className="h-5 w-32" /> : profileData?.name}</h2>
                   <Badge variant="outline" className="mt-1">
                     <GraduationCap className="h-3 w-3 mr-1" />
                     {loading.profile ? "..." : profileData?.campus || "N/A"}
@@ -390,7 +390,7 @@ const BuyerProfile = () => {
                 </div>
                 {loading.profile ? (
                   <div className="space-y-4">
-                    {[...Array(5)].map((_, i) => <Skeleton key={i} className="h-10 w-full" />)}
+                    {[...Array(6)].map((_, i) => <Skeleton key={i} className="h-10 w-full" />)}
                   </div>
                 ) : profileData ? (
                 <div className="space-y-3">
@@ -398,14 +398,17 @@ const BuyerProfile = () => {
                     <User className="h-4 w-4 text-gray-400 mt-0.5" />
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Student ID</p>
-                      <p className="font-medium">{profileData.student_id || 'Not set'}</p>
+                      <p className="font-medium">{profileData.student_id}</p>
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
                     <Mail className="h-4 w-4 text-gray-400 mt-0.5" />
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Email</p>
-                      <p className="font-medium text-sm">{profileData.email || 'No email set'}</p>
+                      <p className="font-medium text-sm">{userEmail}</p>
+                      {profileData.secondary_email && (
+                        <p className="font-medium text-primary text-sm mt-1">{profileData.secondary_email}</p>
+                      )}
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
@@ -423,6 +426,13 @@ const BuyerProfile = () => {
                     </div>
                   </div>
                   <div className="flex items-start gap-2">
+                    <Calendar className="h-4 w-4 text-gray-400 mt-0.5" />
+                    <div>
+                      <p className="text-xs text-gray-500 mb-1">Semester</p>
+                      <p className="font-medium">{profileData.semester || "Not set"}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start gap-2">
                     <MapPin className="h-4 w-4 text-gray-400 mt-0.5" />
                     <div>
                       <p className="text-xs text-gray-500 mb-1">Campus</p>
@@ -432,14 +442,14 @@ const BuyerProfile = () => {
                   <div className="flex items-start gap-2">
                     <Globe className="h-4 w-4 text-gray-400 mt-0.5" />
                     <div>
-                      <p className="text-xs text-gray-500 mb-1">Skills</p>
+                      <p className="text-xs text-gray-500 mb-1">Languages</p>
                       <div className="flex flex-wrap gap-2">
-                        {profileData.skills?.length > 0 ? (
-                          profileData.skills.map((skill, idx) => (
-                            <Badge key={idx} variant="secondary">{skill}</Badge>
+                        {profileData.languages?.length > 0 ? (
+                          profileData.languages.map((lang, idx) => (
+                            <Badge key={idx} variant="secondary">{lang}</Badge>
                           ))
                         ) : (
-                          <p className="text-sm text-gray-400">No skills added</p>
+                          <p className="text-sm text-gray-400">No languages added</p>
                         )}
                       </div>
                     </div>
@@ -495,12 +505,13 @@ const BuyerProfile = () => {
                 {/* 1. MY PROFILE TAB */}
                 {activeTab === "profile" && (
                   <div className="space-y-6">
+                    {/* Seller Status CTA Card */}
                     <SellerStatusCard 
-                      status={profileData?.verification_status || 'UNVERIFIED'} 
-                      loading={loading.profile}
-                      isProfileComplete={isProfileComplete}
+                      status={profileData?.verification_status || 'unverified'} 
+                      loading={loading.profile} 
                     />
 
+                    {/* About Me Section */}
                     <Card className="p-6">
                       <div className="flex items-center justify-between mb-4">
                         <h3 className="text-lg font-semibold">About Me</h3>
@@ -532,36 +543,63 @@ const BuyerProfile = () => {
                       )}
                     </Card>
 
+                    {/* Purchase History */}
                     <Card className="p-6">
                       <div className="flex items-center justify-between mb-4">
-                        <h3 className="text-lg font-semibold">Recent Deals</h3>
+                        <h3 className="text-lg font-semibold">Recent Purchases</h3>
                         <Button variant="outline" size="sm">View All</Button>
                       </div>
-                      {loading.deals ? (
+                      {loading.purchases ? (
                         <div className="space-y-3">
                           {[1, 2].map((i) => <Skeleton key={i} className="h-16 w-full" />)}
                         </div>
-                      ) : deals.length > 0 ? (
+                      ) : purchases.length > 0 ? (
                         <div className="space-y-3">
-                          {deals.map((deal) => (
-                            <div key={deal.id} className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                          {purchases.map((purchase) => (
+                            <div key={purchase.id} className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
                               <div className="h-12 w-12 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
                                 <ShoppingBag className="h-6 w-6 text-gray-400"/>
                               </div>
                               <div className="flex-1">
-                                <p className="font-semibold">{deal.services?.title || "Service not available"}</p>
+                                <p className="font-semibold">{purchase.services?.title || "Service not available"}</p>
                                 <p className="text-sm text-gray-500">
-                                  {new Date(deal.created_at).toLocaleDateString()} - ${deal.final_amount}
+                                  {new Date(purchase.purchase_datetime).toLocaleDateString()} - ${purchase.amount}
                                 </p>
                               </div>
-                              <Badge variant={deal.status === 'COMPLETED' ? 'default' : 'secondary'}>{deal.status}</Badge>
                             </div>
                           ))}
                         </div>
                       ) : (
                         <div className="text-center py-8">
                           <ShoppingBag className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
-                          <p className="text-sm text-gray-500">No deals yet</p>
+                          <p className="text-sm text-gray-500">No purchases yet</p>
+                        </div>
+                      )}
+                    </Card>
+
+                    {/* Wishlist */}
+                    <Card className="p-6">
+                      <div className="flex items-center justify-between mb-4">
+                        <h3 className="text-lg font-semibold">Wishlist</h3>
+                        <Badge variant="secondary">{wishlist.length} item{wishlist.length !== 1 && 's'}</Badge>
+                      </div>
+                       {loading.wishlist ? (
+                        <Skeleton className="h-24 w-full" />
+                      ) : wishlist.length > 0 ? (
+                         <div className="space-y-3">
+                          {wishlist.map((item, index) => (
+                            <div key={index} className="flex items-center gap-3 p-3 border border-gray-200 dark:border-gray-700 rounded-lg">
+                               <div className="h-12 w-12 bg-gray-100 dark:bg-gray-700 rounded flex items-center justify-center">
+                                <Heart className="h-6 w-6 text-gray-400"/>
+                              </div>
+                              <p className="font-semibold">{item.services?.title || "Service not available"}</p>
+                            </div>
+                          ))}
+                        </div>
+                      ) : (
+                        <div className="text-center py-8">
+                          <Heart className="h-12 w-12 mx-auto text-gray-300 dark:text-gray-600 mb-3" />
+                          <p className="text-sm text-gray-500">No items in wishlist</p>
                         </div>
                       )}
                     </Card>
@@ -585,7 +623,7 @@ const BuyerProfile = () => {
                           <Card key={session.id} className="p-4">
                             <div className="flex items-center justify-between">
                               <div className="space-y-1 flex-1">
-                                <p className="font-semibold">Session for Deal #{session.deal_id}</p>
+                                <p className="font-semibold">{session.services?.title || "Service"}</p>
                                 <p className="text-sm text-gray-500">
                                    <Calendar className="h-3.5 w-3.5 inline-block mr-1.5 -mt-1"/>
                                    {new Date(session.session_datetime).toLocaleString()}
@@ -635,6 +673,16 @@ const BuyerProfile = () => {
                               onCheckedChange={(val) => handleSettingsChange('email_notifications_enabled', val)}
                             />
                           </div>
+                          <div className="flex items-center justify-between">
+                            <div>
+                              <p className="font-medium">Session Reminders</p>
+                              <p className="text-sm text-gray-500">Get reminded before sessions</p>
+                            </div>
+                            <Switch
+                               checked={settings.session_reminders_enabled}
+                               onCheckedChange={(val) => handleSettingsChange('session_reminders_enabled', val)}
+                             />
+                          </div>
                         </div>
                       </Card>
                       <Card className="p-6">
@@ -645,6 +693,7 @@ const BuyerProfile = () => {
                               <p className="font-medium">Profile Visibility</p>
                               <p className="text-sm text-gray-500">Who can see your profile</p>
                             </div>
+                            {/* This would be a select/dropdown in a real scenario */}
                             <Badge variant="outline">{settings.profile_visibility}</Badge>
                           </div>
                         </div>
