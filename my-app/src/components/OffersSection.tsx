@@ -2,7 +2,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import ChatPopup from "./ChatPopup";
 import {
   Heart,
   Instagram,
@@ -12,32 +11,10 @@ import {
   ChevronRight,
   Search,
   ArrowRight,
-  MessageSquare,
 } from "lucide-react";
 import React, { useState } from "react";
 
-// --- Floating Icon Component ---
-// Modified to remove the unnecessary studentName prop
-const FloatingMessageIcon = ({ onClick }) => (
-  <button
-    onClick={onClick}
-    className="fixed bottom-6 right-6 z-40 p-4 bg-blue-600 text-white rounded-full shadow-xl hover:bg-blue-700 transition-colors flex items-center justify-center w-14 h-14"
-    aria-label="Open chat history"
-    title="Open chat history"
-  >
-    <MessageSquare className="w-6 h-6" />
-  </button>
-);
-// --------------------------------
-
-const OffersSection = () => {
-  // 🧩 Chat states
-  const [activeStudent, setActiveStudent] = useState<any>(null);
-  const [isChatOpen, setIsChatOpen] = useState(false);
-
-  // Simulated logged-in user
-  const currentUser = { name: "You" };
-
+const OffersSection = ({ onSelectStudent }) => {
   const categories = [
     "Non-Academic",
     "UI/UX Design",
@@ -78,25 +55,7 @@ const OffersSection = () => {
     },
   ];
 
-  // When "Send message" clicked (Chat initiated from a card)
-  const handleSelectStudent = (student) => {
-    setActiveStudent(student);
-    setIsChatOpen(true);
-  };
-
-  // Floating icon open
-  const handleOpenChat = () => {
-    // 💡 FIX FOR SCENARIO 2: Only open the chat panel, DO NOT set a default student.
-    // The activeStudent state is either the last selected chat (preserved by ChatPopup history)
-    // or null (set by handleCloseChat).
-    setIsChatOpen(true);
-  };
-
-  // Close chat handler (Crucial for Scenario 2)
-  const handleCloseChat = () => {
-    setIsChatOpen(false);
-    setActiveStudent(null); // Ensures ChatPopup re-mounts with student=null on next open
-  };
+  const [selectedCategory] = useState("All");
 
   return (
     <section
@@ -205,7 +164,7 @@ const OffersSection = () => {
                 </Button>
                 <Button
                   className="flex-1 rounded-full text-xs lg:text-sm"
-                  onClick={() => handleSelectStudent(student)}
+                  onClick={() => onSelectStudent(student)}
                 >
                   Send message
                 </Button>
@@ -245,22 +204,6 @@ const OffersSection = () => {
           </div>
         </Card>
       </div>
-
-      {/* Floating Message Icon */}
-      {!isChatOpen && (
-        <FloatingMessageIcon
-          onClick={handleOpenChat}
-        />
-      )}
-
-      {/* Chat Popup */}
-      {isChatOpen && (
-        <ChatPopup
-          student={activeStudent} // activeStudent will be null if opened from floating icon after close
-          onClose={handleCloseChat}
-          currentUser={currentUser}
-        />
-      )}
     </section>
   );
 };
