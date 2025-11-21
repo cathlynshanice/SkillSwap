@@ -18,7 +18,7 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
 
       // If no session, redirect to login page (unless already on a public page)
       if (!session) {
-        if (location.pathname !== "/login" && location.pathname !== "/signup") {
+        if (location.pathname !== "/login" && location.pathname !== "/signup" && location.pathname !== "/landing" && location.pathname !== "/") {
           navigate("/login");
         }
         setIsLoading(false);

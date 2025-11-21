@@ -1,0 +1,10 @@
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# Konfigurasi Redirect untuk React Router (SPA)
+# Ini mencegah Error 404 saat refresh halaman selain home
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
