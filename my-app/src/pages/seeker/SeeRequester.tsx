@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { supabase } from "@/lib/SupabaseClient";
 import { useNavigate } from "react-router-dom";
 import { Mail, Briefcase, UserCheck, X } from "lucide-react";
-import HomeNavbar from "@/components/HomeNavbar";
+import Home from "@/components/Home";
 import Footer from "@/components/Footer";
 
 interface Job {
@@ -276,7 +276,7 @@ const SeeRequester = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-between py-20">
       <div>
-        <HomeNavbar />
+        <Home />
       </div>
       <div className="p-8 pt-16 max-w-4xl mx-auto">
         <h1 className="text-3xl font-bold mb-6 text-gray-800">

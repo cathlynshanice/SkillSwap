@@ -25,7 +25,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import { setUserRole } from "@/lib/userContext";
 
-const HomeNavbar = () => {
+const Home = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
@@ -239,4 +239,4 @@ const HomeNavbar = () => {
   );
 };
 
-export default HomeNavbar;
+export default Home;
