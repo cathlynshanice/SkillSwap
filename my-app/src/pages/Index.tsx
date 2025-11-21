@@ -6,7 +6,16 @@ import OffersSection from "@/components/OffersSection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
-  return null;
+  return (
+    <div>
+      <Navbar />
+      <HeroSection />
+      <DifferentSection />
+      <FeaturesSection />
+      <OffersSection />
+      <Footer />
+    </div>
+  );
 };
 
 export default Index;
