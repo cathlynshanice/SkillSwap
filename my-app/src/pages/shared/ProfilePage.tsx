@@ -24,23 +24,21 @@ const ProfilePage = () => {
         return;
       }
 
-      const { data: profiles, error } = await supabase
+      const { data: profile, error } = await supabase
         .from('profiles')
         .select('verification_status')
         .eq('id', user.id)
-        .limit(1);
+        .single();
       
       if (error) {
         console.error("Error fetching profile status:", error);
-        // Default to buyer view on error
-        setStatus('unverified');
-        setUserRole('buyer');
         setLoading(false);
+        // Potentially render an error message page
         return;
       }
 
-      if (profiles && profiles.length > 0) {
-        const currentStatus = profiles[0].verification_status as VerificationStatus;
+      if (profile) {
+        const currentStatus = profile.verification_status as VerificationStatus;
         setStatus(currentStatus);
         // Set the role in the context based on the status from the database
         if (currentStatus === 'verified') {

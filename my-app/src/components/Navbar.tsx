@@ -79,7 +79,9 @@ const Navbar = () => {
             <a href="#footer" className="text-sm lg:text-base hover:text-primary transition-colors">
               Contact
             </a>
-            
+            <Button asChild variant="outline" className="rounded-lg text-sm lg:text-base px-3 lg:px-4 py-1.5 lg:py-2">
+              <a href="/home">Home</a>
+            </Button>
             <Button asChild className="rounded-lg text-sm lg:text-base px-3 lg:px-4 py-1.5 lg:py-2">
               <a href="/login">Login</a>
             </Button>
