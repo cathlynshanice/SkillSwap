@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
-import { MoreVertical, Handshake, User, CalendarDays, DollarSign, MessageSquare } from "lucide-react";
+import { Tag, MoreVertical, Handshake, User, CalendarDays, DollarSign, MessageSquare } from "lucide-react";
 import ProfileSidebar from "@/components/ProfileSidebar";
 import { useLocation, useNavigate } from "react-router-dom";
 import { isSeller } from "@/lib/userContext";
@@ -98,7 +98,7 @@ const ActiveDeals = () => {
               Home
             </button>
             <span className="text-gray-400">/</span>
-            <span className="text-gray-900 dark:text-gray-100 font-medium">Active Deals</span>
+            <span className="text-gray-900 dark:text-gray-100 font-medium">Deals</span>
           </div>
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm">
@@ -129,9 +129,12 @@ const ActiveDeals = () => {
                   <div className="flex flex-col md:items-end gap-2 md:gap-1">
                     <div className="flex items-center gap-2">
                       {deal.type === "paid" ? (
-                        <Badge variant="secondary" className="flex items-center gap-1">
-                          <DollarSign className="h-4 w-4" /> Rp{deal.price.toLocaleString()}
-                        </Badge>
+                        <Badge 
+                            variant="secondary" 
+                            className="flex items-center gap-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs font-medium px-2 py-0.5"
+                          >
+                            <Tag className="h-3 w-3" /> Rp{deal.price.toLocaleString()}
+                          </Badge>
                       ) : (
                         <Badge variant="default" className="flex items-center gap-1">
                           <Handshake className="h-4 w-4" /> Barter

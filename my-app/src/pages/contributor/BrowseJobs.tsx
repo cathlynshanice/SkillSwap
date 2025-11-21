@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Search, Filter, Clock, DollarSign, Briefcase, X } from "lucide-react";
-// import HomeNavbar from "@/components/HomeNavbar";
+import HomeNavbar from "@/components/HomeNavbar";
 import Footer from "@/components/Footer";
 import { supabase } from "@/lib/SupabaseClient";
 import { useNavigate } from "react-router-dom";

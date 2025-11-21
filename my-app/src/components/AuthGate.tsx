@@ -9,46 +9,66 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((_event, session) => {
-      setIsLoading(false);
+    const checkSessionAndProfile = async () => {
+      // 1. Check for an active session
+      const {
+        data: { session },
+        error: sessionError,
+      } = await supabase.auth.getSession();
 
-      const publicRoutes = ["/login", "/signup", "/landing", "/"];
-
-      if (session) {
-        // --- USER IS SIGNED IN ---
-        // If user is on a public/auth page, redirect them to the home page.
-        if (publicRoutes.includes(location.pathname)) {
-          navigate("/home", { replace: true });
+      // If no session, redirect to login page (unless already on a public page)
+      if (!session) {
+        if (location.pathname !== "/login" && location.pathname !== "/signup") {
+          navigate("/login");
         }
-      } else {
-        // --- USER IS NOT SIGNED IN ---
-        const isPublicRoute = ["/login", "/signup", "/landing"].includes(location.pathname);
-        // If user is on a protected route (and not on a public one or root), redirect to login.
-        if (!isPublicRoute && location.pathname !== "/") {
-          navigate("/login", { replace: true });
-        }
-        // If user is at the root, explicitly send them to the landing page.
-        if (location.pathname === "/") {
-          navigate("/landing", { replace: true });
-        }
+        setIsLoading(false);
+        return;
       }
-    });
 
-    // Cleanup the subscription when the component unmounts
-    return () => {
-      subscription?.unsubscribe();
+      // 2. If session exists, check if a profile has been created
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("student_id") // We only need to check for the existence of one required field
+        .eq("id", session.user.id)
+        .single();
+
+      // If there's an error (other than 'PGRST116' which means no rows found), log it
+      if (profileError && profileError.code !== "PGRST116") {
+        console.error("Error fetching profile:", profileError);
+        // Potentially handle this error, e.g., by showing an error page
+      }
+
+      // 3. Redirect to onboarding if profile is incomplete or doesn't exist
+      // and the user is not already on the onboarding page.
+      if (!profile || !profile.student_id) {
+        if (location.pathname !== "/onboarding") {
+          navigate("/onboarding");
+        }
+        setIsLoading(false);
+      } else {
+        // 4. If profile is complete, but user is on a public/auth page, redirect to home
+        if (
+          location.pathname === "/login" ||
+          location.pathname === "/signup" ||
+          location.pathname === "/onboarding"
+        ) {
+          navigate("/home");
+        }
+        // Otherwise, the profile is complete and they are on a protected page, so just show the content
+        setIsLoading(false);
+      }
     };
+
+    checkSessionAndProfile();
   }, [location.pathname, navigate]);
 
-  // While the initial auth check is running, show a full-page loading screen.
+  // While checking, show a full-page loading screen
   if (isLoading) {
     return (
       <div className="h-screen w-screen flex items-center justify-center">
         <div className="space-y-4 w-1/2">
           <h1 className="text-2xl font-bold text-center">
-            Securing your session...
+            Loading Your Experience...
           </h1>
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-full" />
@@ -58,5 +78,6 @@ export default function AuthGate({ children }: { children: React.ReactNode }) {
     );
   }
 
+  // Once loading is complete, render the requested page content
   return <>{children}</>;
 }
